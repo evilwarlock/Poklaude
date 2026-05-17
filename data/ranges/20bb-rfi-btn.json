@@ -26,14 +26,9 @@
     "orange": "jam"
   },
   "boundaryRule": {
-    "method": "grid_adjacency",
-    "adjacency": "8-direction",
-    "description": "borderline_fold = fold hand adjacent to raise/jam/mixed; borderline_raise = raise or jam hand adjacent to fold/mixed."
-  },
-  "boundaryRule": {
-    "method": "grid_adjacency",
-    "description": "Borderline hands should be derived from the 13x13 grid: fold hands adjacent to raise hands, plus raise hands adjacent to fold hands.",
-    "adjacency": "8-direction"
+    "method": "right_neighbor_of_non_pure_fold",
+    "direction": "right",
+    "description": "A boundary hand is the immediate hand to the right of a non-pure-fold hand in the same grid row. Non-pure-fold means raise, jam, or mixed with any positive raise/jam frequency. In practice, this captures the first pure-fold hand immediately after a playable or mixed hand."
   },
   "hands": {
     "AA": { "action": "raise", "frequency": 1.0 },
@@ -63,7 +58,7 @@
     "K3s": { "action": "raise", "frequency": 1.0 },
     "K2s": { "action": "mixed", "frequency": 0.22, "frequencies": { "raise": 0.22, "jam": 0.0, "fold": 0.78 } },
     "AQo": { "action": "raise", "frequency": 1.0 },
-    "KQo": { "action": "mixed", "frequency": 1.0，"frequencies": { "raise": 0.91, "jam": 0.08, "fold": 0.0 }, "colorMix": { "raiseBlue": 0.91, "orangeJam": 0.08, "foldBlue": 0.0 } },
+    "KQo": { "action": "mixed", "frequency": 1.0, "frequencies": { "raise": 0.91, "jam": 0.08, "fold": 0.0 }, "colorMix": { "raiseBlue": 0.91, "orangeJam": 0.08, "foldBlue": 0.0 } },
     "QQ": { "action": "raise", "frequency": 1.0 },
     "QJs": { "action": "mixed", "frequency": 1.0, "frequencies": { "raise": 0.64, "jam": 0.36, "fold": 0.0 }, "colorMix": { "raiseBlue": 0.64, "orangeJam": 0.36, "foldBlue": 0.0 } },
     "QTs": { "action": "raise", "frequency": 1.0 },
@@ -207,10 +202,38 @@
     "22": { "action": "fold", "frequency": 0.0 }
   },
   "boundaryHands": {
-    "borderlineRaise": ["A3s", "A2s", "K5s", "K4s", "K3s", "Q7s", "Q6s", "Q5s", "J7s", "T7s", "K9o", "Q9o", "J9o", "T9o", "99", "98s", "97s", "A8o", "K8o", "88", "87s", "A7o", "77", "A6o", "66", "A5o", "A4o", "A3o"],
-    "borderlineJam": ["55"],
-    "borderlineFold": ["Q3s", "Q2s", "J4s", "J3s", "T5s", "T4s", "96s", "95s", "Q8o", "J8o", "T8o", "98o", "86s", "K7o", "Q7o", "97o", "87o", "76s", "75s", "K6o", "86o", "76o", "65s", "64s", "K5o", "75o", "65o", "54s", "53s", "K4o", "64o", "54o", "43s", "42s", "K3o", "53o", "43o", "32s", "K2o", "42o", "32o", "22"],
-    "mixed": ["A7s", "K2s", "QJs", "Q4s", "JTs", "J6s", "J5s", "T6s", "44", "33", "A2o"]
-
+    "rightOfNonPureFold": [
+      "Q3s",
+      "J4s",
+      "T5s",
+      "96s",
+      "Q8o",
+      "86s",
+      "K7o",
+      "76s",
+      "K6o",
+      "65s",
+      "K5o",
+      "54s",
+      "K4o",
+      "43s",
+      "K3o",
+      "32s",
+      "K2o"
+    ],
+    "mixed": [
+      "A7s",
+      "K2s",
+      "KQo",
+      "QJs",
+      "Q4s",
+      "JTs",
+      "J6s",
+      "J5s",
+      "T6s",
+      "44",
+      "33",
+      "A2o"
+    ]
   }
 }
