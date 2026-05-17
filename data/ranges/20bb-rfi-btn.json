@@ -30,6 +30,11 @@
     "adjacency": "8-direction",
     "description": "borderline_fold = fold hand adjacent to raise/jam/mixed; borderline_raise = raise or jam hand adjacent to fold/mixed."
   },
+  "boundaryRule": {
+    "method": "grid_adjacency",
+    "description": "Borderline hands should be derived from the 13x13 grid: fold hands adjacent to raise hands, plus raise hands adjacent to fold hands.",
+    "adjacency": "8-direction"
+  },
   "hands": {
     "AA": { "action": "raise", "frequency": 1.0 },
     "AKs": { "action": "raise", "frequency": 1.0 },
@@ -206,5 +211,6 @@
     "borderlineJam": ["55"],
     "borderlineFold": ["Q3s", "Q2s", "J4s", "J3s", "T5s", "T4s", "96s", "95s", "Q8o", "J8o", "T8o", "98o", "86s", "K7o", "Q7o", "97o", "87o", "76s", "75s", "K6o", "86o", "76o", "65s", "64s", "K5o", "75o", "65o", "54s", "53s", "K4o", "64o", "54o", "43s", "42s", "K3o", "53o", "43o", "32s", "K2o", "42o", "32o", "22"],
     "mixed": ["A7s", "K2s", "QJs", "Q4s", "JTs", "J6s", "J5s", "T6s", "44", "33", "A2o"]
+
   }
 }
