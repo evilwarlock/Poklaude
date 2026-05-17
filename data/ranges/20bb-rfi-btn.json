@@ -10,24 +10,30 @@
     "type": "manual_placeholder",
     "label": "Dummy placeholder data"
   },
+  "boundaryRule": {
+    "method": "grid_adjacency",
+    "description": "Borderline hands should be derived from the 13x13 grid: fold hands adjacent to raise hands, plus raise hands adjacent to fold hands.",
+    "adjacency": "8-direction"
+  },
   "hands": {
-    "AA": { "action": "raise", "frequency": 1, "notes": "dummy" },
-    "AKs": { "action": "raise", "frequency": 1, "notes": "dummy" },
-    "AQs": { "action": "raise", "frequency": 1, "notes": "dummy" },
-    "A2s": { "action": "raise", "frequency": 1, "notes": "dummy" },
-    "K8s": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
-    "K7s": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
-    "K6s": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
-    "Q9s": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
-    "Q8s": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
-    "J9s": { "action": "raise", "frequency": 1, "notes": "dummy" },
-    "T9s": { "action": "raise", "frequency": 1, "notes": "dummy" },
-    "A9o": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
-    "A8o": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
-    "KTo": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
-    "K9o": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
-    "55": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
-    "44": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
-    "72o": { "action": "fold", "frequency": 0, "notes": "dummy" }
+    "AA": { "action": "raise", "frequency": 1, "tags": ["premium"] },
+    "AKs": { "action": "raise", "frequency": 1, "tags": ["premium"] },
+    "AQs": { "action": "raise", "frequency": 1, "tags": ["broadway"] },
+    "A2s": { "action": "raise", "frequency": 1, "tags": ["suited_ace"] },
+    "K7s": { "action": "raise", "frequency": 1, "boundaryType": "borderline_raise", "boundaryScore": 0.85, "tags": ["suited_king", "boundary"] },
+    "K6s": { "action": "fold", "frequency": 0, "boundaryType": "borderline_fold", "boundaryScore": 0.95, "tags": ["suited_king", "boundary"] },
+    "Q9s": { "action": "raise", "frequency": 1, "boundaryType": "borderline_raise", "boundaryScore": 0.85, "tags": ["suited_broadway", "boundary"] },
+    "Q8s": { "action": "fold", "frequency": 0, "boundaryType": "borderline_fold", "boundaryScore": 0.95, "tags": ["suited_broadway", "boundary"] },
+    "J9s": { "action": "raise", "frequency": 1, "boundaryType": "borderline_raise", "boundaryScore": 0.85, "tags": ["suited_connector", "boundary"] },
+    "J8s": { "action": "fold", "frequency": 0, "boundaryType": "borderline_fold", "boundaryScore": 0.9, "tags": ["suited_connector", "boundary"] },
+    "T9s": { "action": "raise", "frequency": 1, "boundaryType": "borderline_raise", "boundaryScore": 0.8, "tags": ["suited_connector", "boundary"] },
+    "T8s": { "action": "fold", "frequency": 0, "boundaryType": "borderline_fold", "boundaryScore": 0.85, "tags": ["suited_connector", "boundary"] },
+    "A9o": { "action": "raise", "frequency": 1, "boundaryType": "borderline_raise", "boundaryScore": 0.8, "tags": ["offsuit_ace", "boundary"] },
+    "A8o": { "action": "fold", "frequency": 0, "boundaryType": "borderline_fold", "boundaryScore": 0.9, "tags": ["offsuit_ace", "boundary"] },
+    "KTo": { "action": "raise", "frequency": 1, "boundaryType": "borderline_raise", "boundaryScore": 0.8, "tags": ["offsuit_broadway", "boundary"] },
+    "K9o": { "action": "fold", "frequency": 0, "boundaryType": "borderline_fold", "boundaryScore": 0.85, "tags": ["offsuit_broadway", "boundary"] },
+    "66": { "action": "raise", "frequency": 1, "boundaryType": "borderline_raise", "boundaryScore": 0.75, "tags": ["pair", "boundary"] },
+    "55": { "action": "fold", "frequency": 0, "boundaryType": "borderline_fold", "boundaryScore": 0.85, "tags": ["pair", "boundary"] },
+    "72o": { "action": "fold", "frequency": 0, "tags": ["clear_fold"] }
   }
 }

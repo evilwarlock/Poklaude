@@ -10,23 +10,29 @@
     "type": "manual_placeholder",
     "label": "Dummy placeholder data"
   },
+  "boundaryRule": {
+    "method": "grid_adjacency",
+    "description": "Borderline hands should be derived from the 13x13 grid: fold hands adjacent to raise hands, plus raise hands adjacent to fold hands.",
+    "adjacency": "8-direction"
+  },
   "hands": {
-    "AA": { "action": "raise", "frequency": 1, "notes": "dummy" },
-    "AKs": { "action": "raise", "frequency": 1, "notes": "dummy" },
-    "A2s": { "action": "raise", "frequency": 1, "notes": "dummy" },
-    "K5s": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
-    "K4s": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
-    "Q7s": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
-    "Q6s": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
-    "J8s": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
-    "J7s": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
-    "T8s": { "action": "raise", "frequency": 1, "notes": "dummy" },
-    "A5o": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
-    "A4o": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
-    "K9o": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
-    "K8o": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
-    "33": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
-    "22": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
-    "72o": { "action": "fold", "frequency": 0, "notes": "dummy" }
+    "AA": { "action": "raise", "frequency": 1, "tags": ["premium"] },
+    "AKs": { "action": "raise", "frequency": 1, "tags": ["premium"] },
+    "A2s": { "action": "raise", "frequency": 1, "tags": ["suited_ace"] },
+    "K5s": { "action": "raise", "frequency": 1, "boundaryType": "borderline_raise", "boundaryScore": 0.85, "tags": ["suited_king", "boundary"] },
+    "K4s": { "action": "fold", "frequency": 0, "boundaryType": "borderline_fold", "boundaryScore": 0.95, "tags": ["suited_king", "boundary"] },
+    "Q7s": { "action": "raise", "frequency": 1, "boundaryType": "borderline_raise", "boundaryScore": 0.85, "tags": ["suited_queen", "boundary"] },
+    "Q6s": { "action": "fold", "frequency": 0, "boundaryType": "borderline_fold", "boundaryScore": 0.95, "tags": ["suited_queen", "boundary"] },
+    "J8s": { "action": "raise", "frequency": 1, "boundaryType": "borderline_raise", "boundaryScore": 0.85, "tags": ["suited_jack", "boundary"] },
+    "J7s": { "action": "fold", "frequency": 0, "boundaryType": "borderline_fold", "boundaryScore": 0.95, "tags": ["suited_jack", "boundary"] },
+    "T8s": { "action": "raise", "frequency": 1, "boundaryType": "borderline_raise", "boundaryScore": 0.8, "tags": ["suited_connector", "boundary"] },
+    "T7s": { "action": "fold", "frequency": 0, "boundaryType": "borderline_fold", "boundaryScore": 0.85, "tags": ["suited_connector", "boundary"] },
+    "A5o": { "action": "raise", "frequency": 1, "boundaryType": "borderline_raise", "boundaryScore": 0.8, "tags": ["offsuit_ace", "boundary"] },
+    "A4o": { "action": "fold", "frequency": 0, "boundaryType": "borderline_fold", "boundaryScore": 0.9, "tags": ["offsuit_ace", "boundary"] },
+    "K9o": { "action": "raise", "frequency": 1, "boundaryType": "borderline_raise", "boundaryScore": 0.8, "tags": ["offsuit_king", "boundary"] },
+    "K8o": { "action": "fold", "frequency": 0, "boundaryType": "borderline_fold", "boundaryScore": 0.85, "tags": ["offsuit_king", "boundary"] },
+    "44": { "action": "raise", "frequency": 1, "boundaryType": "borderline_raise", "boundaryScore": 0.75, "tags": ["pair", "boundary"] },
+    "33": { "action": "fold", "frequency": 0, "boundaryType": "borderline_fold", "boundaryScore": 0.85, "tags": ["pair", "boundary"] },
+    "72o": { "action": "fold", "frequency": 0, "tags": ["clear_fold"] }
   }
 }
