@@ -24,6 +24,7 @@ https://evilwarlock.github.io/Poklaude/
 - [Architecture](./architecture.md)
 - [Data Model](./data-model.md)
 - [Milestones](./milestones.md)
+- [Range Build Priority](./range-priority.md)
 - [Progress Log](./progress-log.md)
 
 ## Product thesis
