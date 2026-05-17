@@ -2,12 +2,60 @@
 
 ## Current static data model
 
-The MVP keeps data in two places:
+The MVP keeps data in three places:
 
 1. `lib/poker.ts` for static seed questions and filter metadata
-2. Browser `localStorage` for user drill attempts
+2. `data/ranges/*.json` for editable static range placeholders
+3. Browser `localStorage` for user drill attempts
 
 There is no database yet.
+
+## Static range files
+
+Static range files live under:
+
+```text
+data/ranges/
+```
+
+Current files:
+
+```text
+data/ranges/index.json
+data/ranges/20bb-rfi-btn.json
+data/ranges/20bb-rfi-co.json
+data/ranges/20bb-rfi-sb.json
+data/ranges/20bb-rfi-hj.json
+data/ranges/20bb-rfi-utg1.json
+data/ranges/20bb-rfi-utg.json
+```
+
+These are dummy placeholders for now. They are not yet consumed by the drill generator. They exist so the real chart data can be updated in stable files before we wire the app to load ranges dynamically.
+
+Each range file represents one spot:
+
+```json
+{
+  "id": "20bb-rfi-btn",
+  "title": "20bb BTN RFI",
+  "spotType": "RFI",
+  "position": "BTN",
+  "stackDepthBb": 20,
+  "actions": ["raise", "fold"],
+  "status": "dummy",
+  "source": {
+    "type": "manual_placeholder",
+    "label": "Dummy placeholder data"
+  },
+  "hands": {
+    "AA": { "action": "raise", "frequency": 1, "notes": "dummy" },
+    "K7s": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
+    "K6s": { "action": "fold", "frequency": 0, "notes": "dummy boundary" }
+  }
+}
+```
+
+When real data is uploaded or manually entered, update the file and change `status` from `dummy` to `verified`.
 
 ## Current TypeScript entities
 
@@ -63,7 +111,7 @@ export type DrillAttempt = DrillQuestion & {
 ```text
 Scenario: RFI
 Stack: 20bb
-Hero positions: UTG, UTG+1, UTG+2, LJ, HJ, CO, BTN, SB
+Hero positions: UTG, UTG+1, HJ, CO, BTN, SB
 Villain position: Any, but disabled for RFI UI
 ```
 
