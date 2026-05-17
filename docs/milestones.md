@@ -86,24 +86,55 @@ Success criteria:
 - Attempts are persisted beyond the browser.
 - Weakness stats update from real database rows.
 
-## V3: More range types and stack depths
+## V3: More 20bb range types
 
-Goal: expand beyond 20bb RFI.
+Goal: complete the most valuable 20bb module family before expanding stack depths.
+
+Recommended order:
+
+1. 20bb RFI / steal
+2. 20bb Facing OpenJam
+3. 20bb Facing Open / resteal
+4. 20bb Facing 3B Jam
+
+See [Range Build Priority](./range-priority.md) for the detailed ranking and upload order.
 
 Scope:
 
-- More stack depths: 10bb, 15bb, 30bb, 40bb, 60bb+
-- More scenarios: BB Defense, vs RFI, vs 3-Bet, Push/Fold
-- More action types: Call, All-In, Mixed
-- Position-specific chart library
+- More scenarios: Facing OpenJam, Facing Open, Facing 3B Jam
+- More action types: Call, All-In, Fold
+- Position and villain-position-specific chart library
+- Scenario-specific drill wording
 
 Success criteria:
 
 - UI availability config is backed by real supported range configs.
 - Drill generator can handle scenario-specific action sets.
-- Weakness reports compare across scenario, position, and stack.
+- Weakness reports compare across scenario and position at 20bb.
 
-## V4: Course and explanation layer
+## V4: More stack depths
+
+Goal: expand from the 20bb family to adjacent MTT stack depths.
+
+Recommended order:
+
+1. 15bb RFI + Facing OpenJam
+2. 25bb or 30bb RFI
+3. 10bb jam/call-off modules
+4. 40bb+ RFI and non-all-in preflop modules
+
+Scope:
+
+- More stack depths: 10bb, 15bb, 25bb, 30bb, 40bb, 60bb+
+- Stack-specific range chart upload and validation
+- Cross-stack weakness comparison
+
+Success criteria:
+
+- User can compare leaks across 15bb, 20bb, and 30bb.
+- Stack-depth selection changes the underlying range source, not just the displayed label.
+
+## V5: Course and explanation layer
 
 Goal: connect drills to learning material.
 
@@ -119,7 +150,7 @@ Success criteria:
 - User mistakes can be linked to relevant explanation material.
 - App can recommend focused study blocks.
 
-## V5: Full adaptive poker study assistant
+## V6: Full adaptive poker study assistant
 
 Goal: become an MTT preflop and strategy training assistant.
 
