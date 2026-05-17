@@ -63,7 +63,7 @@
     "K3s": { "action": "raise", "frequency": 1.0 },
     "K2s": { "action": "mixed", "frequency": 0.22, "frequencies": { "raise": 0.22, "jam": 0.0, "fold": 0.78 } },
     "AQo": { "action": "raise", "frequency": 1.0 },
-    "KQo": { "action": "raise", "frequency": 1.0 },
+    "KQo": { "action": "mixed", "frequency": 1.0，"frequencies": { "raise": 0.91, "jam": 0.08, "fold": 0.0 }, "colorMix": { "raiseBlue": 0.91, "orangeJam": 0.08, "foldBlue": 0.0 } },
     "QQ": { "action": "raise", "frequency": 1.0 },
     "QJs": { "action": "mixed", "frequency": 1.0, "frequencies": { "raise": 0.64, "jam": 0.36, "fold": 0.0 }, "colorMix": { "raiseBlue": 0.64, "orangeJam": 0.36, "foldBlue": 0.0 } },
     "QTs": { "action": "raise", "frequency": 1.0 },
