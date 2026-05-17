@@ -1,0 +1,33 @@
+{
+  "id": "20bb-rfi-btn",
+  "title": "20bb BTN RFI",
+  "spotType": "RFI",
+  "position": "BTN",
+  "stackDepthBb": 20,
+  "actions": ["raise", "fold"],
+  "status": "dummy",
+  "source": {
+    "type": "manual_placeholder",
+    "label": "Dummy placeholder data"
+  },
+  "hands": {
+    "AA": { "action": "raise", "frequency": 1, "notes": "dummy" },
+    "AKs": { "action": "raise", "frequency": 1, "notes": "dummy" },
+    "AQs": { "action": "raise", "frequency": 1, "notes": "dummy" },
+    "A2s": { "action": "raise", "frequency": 1, "notes": "dummy" },
+    "K8s": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
+    "K7s": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
+    "K6s": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
+    "Q9s": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
+    "Q8s": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
+    "J9s": { "action": "raise", "frequency": 1, "notes": "dummy" },
+    "T9s": { "action": "raise", "frequency": 1, "notes": "dummy" },
+    "A9o": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
+    "A8o": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
+    "KTo": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
+    "K9o": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
+    "55": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
+    "44": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
+    "72o": { "action": "fold", "frequency": 0, "notes": "dummy" }
+  }
+}
