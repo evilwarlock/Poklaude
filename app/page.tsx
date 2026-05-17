@@ -327,15 +327,31 @@ function OptionPill<T extends string | number>({
   );
 }
 
-const tableSeats: Array<{ position: Position; label: string; className: string }> = [
-  { position: 'SB', label: 'SB', className: 'seat-sb' },
-  { position: 'BB', label: 'BB', className: 'seat-bb' },
-  { position: 'UTG', label: 'UTG', className: 'seat-utg' },
-  { position: 'UTG+1', label: 'UTG1', className: 'seat-utg1' },
-  { position: 'HJ', label: 'HJ', className: 'seat-hj' },
-  { position: 'CO', label: 'CO', className: 'seat-co' },
-  { position: 'BTN', label: 'BTN', className: 'seat-btn' },
+const tableOrder: Position[] = ['SB', 'BB', 'UTG', 'UTG+1', 'HJ', 'CO', 'BTN'];
+
+const visualSeatSlots = [
+  'seat-bottom',
+  'seat-bottom-left',
+  'seat-left',
+  'seat-top-left',
+  'seat-top',
+  'seat-top-right',
+  'seat-right',
 ];
+
+function getTableSeatsFromHero(heroPosition: Position) {
+  const heroIndex = tableOrder.indexOf(heroPosition);
+  const orderedSeats = heroIndex === -1
+    ? tableOrder
+    : [...tableOrder.slice(heroIndex), ...tableOrder.slice(0, heroIndex)];
+
+  return orderedSeats.map((position, index) => ({
+    position,
+    label: displayPosition(position),
+    className: visualSeatSlots[index],
+    isHero: position === heroPosition,
+  }));
+}
 
 function DrillScreen({
   question,
@@ -356,15 +372,12 @@ function DrillScreen({
     <main className="drill-shell">
       <button className="back-btn" onClick={onBack}>←</button>
       <div className="table">
-        {tableSeats.map((seat) => {
-          const isHero = seat.position === question.heroPosition;
-          return (
-            <div className={`seat ${seat.className} ${isHero ? 'hero' : ''}`} key={seat.position}>
-              {seat.label}
-              {isHero && <><br />{question.stackDepth} bb</>}
-            </div>
-          );
-        })}
+        {getTableSeatsFromHero(question.heroPosition).map((seat) => (
+          <div className={`seat ${seat.className} ${seat.isHero ? 'hero' : ''}`} key={seat.position}>
+            {seat.label}
+            {seat.isHero && <><br />{question.stackDepth} bb</>}
+          </div>
+        ))}
         <div className="spot-title">
           <div className="pot">● {question.potBb.toFixed(2)} bb ⓘ</div>
           <div>{displayPosition(question.heroPosition)} RFI at {question.stackDepth}bb</div>
