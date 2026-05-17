@@ -41,7 +41,7 @@ button {
 
 .logo {
   font-weight: 900;
-  font-size: 28px;
+  font-size: 24px;
   letter-spacing: -0.05em;
 }
 
@@ -312,28 +312,56 @@ h1 {
 
 .seat {
   position: absolute;
-  min-width: 88px;
+  min-width: 78px;
   border-radius: 999px;
   background: rgba(0,0,0,0.6);
-  padding: 12px;
+  padding: 10px 12px;
   text-align: center;
   color: #b6bbc4;
   font-weight: 800;
+  line-height: 1.2;
 }
 
 .seat.hero {
   color: #fff;
   border: 3px solid var(--success);
-  bottom: -32px;
+  background: rgba(22, 163, 74, 0.2);
+}
+
+.seat-sb {
+  left: 48px;
+  bottom: 20px;
+}
+
+.seat-bb {
+  left: -42px;
+  bottom: 142px;
+}
+
+.seat-utg {
+  left: -22px;
+  top: 86px;
+}
+
+.seat-utg1 {
   left: 50%;
+  top: -34px;
   transform: translateX(-50%);
 }
 
-.seat.villain {
-  color: #fff;
-  border: 3px solid #ef4444;
-  right: -36px;
-  bottom: 38px;
+.seat-hj {
+  right: -22px;
+  top: 86px;
+}
+
+.seat-co {
+  right: -42px;
+  bottom: 142px;
+}
+
+.seat-btn {
+  right: 48px;
+  bottom: 20px;
 }
 
 .cards {
