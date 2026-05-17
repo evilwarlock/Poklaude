@@ -11,11 +11,22 @@ import {
   defaultFilters,
   filterOptions,
   pickNextQuestion,
+  positionOptions,
+  scenarioOptions,
+  stackOptions,
   summarizeWeakness,
+  villainPositionOptions,
 } from '@/lib/poker';
 
 type ExpandedSection = 'scenario' | 'stack' | 'hero' | 'villain' | null;
 type Screen = 'setup' | 'drill' | 'results';
+
+type SelectableOption<T extends string | number> = {
+  value: T;
+  label: string;
+  enabled: boolean;
+  reason?: string;
+};
 
 const storageKey = 'poklaude_attempts_v1';
 
@@ -151,22 +162,27 @@ export default function Home() {
         subtitle={filters.scenarios.length === filterOptions.scenarios.length ? 'All contexts' : filters.scenarios.join(', ')}
         expanded={expanded === 'scenario'}
         onToggle={() => setExpanded(expanded === 'scenario' ? null : 'scenario')}
-        onClear={() => setFilters((prev) => ({ ...prev, scenarios: [] }))}
+        onClear={() => setFilters((prev) => ({ ...prev, scenarios: ['RFI'] }))}
       >
         <div className="scenario-list">
-          {filterOptions.scenarios.map((scenario) => (
+          {scenarioOptions.map((scenario) => (
             <button
-              key={scenario}
-              className="scenario-row"
-              onClick={() => toggleArrayValue<Scenario>(scenario, filters.scenarios, (value) =>
-                setFilters((prev) => ({ ...prev, scenarios: value })),
-              )}
+              key={scenario.value}
+              className={`scenario-row ${!scenario.enabled ? 'disabled' : ''}`}
+              onClick={() => {
+                if (!scenario.enabled) return;
+                toggleArrayValue<Scenario>(scenario.value, filters.scenarios, (value) =>
+                  setFilters((prev) => ({ ...prev, scenarios: value.length ? value : ['RFI'] })),
+                );
+              }}
+              disabled={!scenario.enabled}
+              title={scenario.reason}
             >
               <span>
-                <span className="scenario-name">{scenario}</span>
-                <span className="scenario-desc">{scenarioDescription(scenario)}</span>
+                <span className="scenario-name">{scenario.label}</span>
+                <span className="scenario-desc">{scenario.enabled ? scenarioDescription(scenario.value) : scenario.reason}</span>
               </span>
-              {filters.scenarios.includes(scenario) && <span className="check">✓</span>}
+              {scenario.enabled && filters.scenarios.includes(scenario.value) && <span className="check">✓</span>}
             </button>
           ))}
         </div>
@@ -178,19 +194,18 @@ export default function Home() {
         subtitle={filters.stackDepths.length === filterOptions.stacks.length ? 'All depths' : `${filters.stackDepths.join(', ')} BB`}
         expanded={expanded === 'stack'}
         onToggle={() => setExpanded(expanded === 'stack' ? null : 'stack')}
-        onClear={() => setFilters((prev) => ({ ...prev, stackDepths: [] }))}
+        onClear={() => setFilters((prev) => ({ ...prev, stackDepths: [20] }))}
       >
         <div className="option-grid">
-          {filterOptions.stacks.map((stack) => (
-            <button
-              key={stack}
-              className={`pill ${filters.stackDepths.includes(stack) ? 'active' : ''}`}
-              onClick={() => toggleArrayValue<number>(stack, filters.stackDepths, (value) =>
-                setFilters((prev) => ({ ...prev, stackDepths: value })),
+          {stackOptions.map((stack) => (
+            <OptionPill
+              key={stack.value}
+              option={stack}
+              active={filters.stackDepths.includes(stack.value)}
+              onClick={() => toggleArrayValue<number>(stack.value, filters.stackDepths, (value) =>
+                setFilters((prev) => ({ ...prev, stackDepths: value.length ? value : [20] })),
               )}
-            >
-              {stack} BB
-            </button>
+            />
           ))}
         </div>
       </FilterCard>
@@ -201,19 +216,18 @@ export default function Home() {
         subtitle={filters.heroPositions.length === filterOptions.positions.length ? 'All positions' : filters.heroPositions.join(', ')}
         expanded={expanded === 'hero'}
         onToggle={() => setExpanded(expanded === 'hero' ? null : 'hero')}
-        onClear={() => setFilters((prev) => ({ ...prev, heroPositions: [] }))}
+        onClear={() => setFilters((prev) => ({ ...prev, heroPositions: ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB'] }))}
       >
         <div className="option-grid">
-          {filterOptions.positions.map((position) => (
-            <button
-              key={position}
-              className={`pill ${filters.heroPositions.includes(position) ? 'active' : ''}`}
-              onClick={() => toggleArrayValue<Position>(position, filters.heroPositions, (value) =>
-                setFilters((prev) => ({ ...prev, heroPositions: value })),
+          {positionOptions.map((position) => (
+            <OptionPill
+              key={position.value}
+              option={position}
+              active={filters.heroPositions.includes(position.value)}
+              onClick={() => toggleArrayValue<Position>(position.value, filters.heroPositions, (value) =>
+                setFilters((prev) => ({ ...prev, heroPositions: value.length ? value : ['UTG'] })),
               )}
-            >
-              {position}
-            </button>
+            />
           ))}
         </div>
       </FilterCard>
@@ -221,29 +235,19 @@ export default function Home() {
       <FilterCard
         title="Villain Position"
         count={filters.villainPositions.length}
-        subtitle={filters.villainPositions.includes('Any') ? 'Any random' : filters.villainPositions.join(', ')}
+        subtitle="Unavailable for RFI MVP"
         expanded={expanded === 'villain'}
         onToggle={() => setExpanded(expanded === 'villain' ? null : 'villain')}
         onClear={() => setFilters((prev) => ({ ...prev, villainPositions: ['Any'] }))}
       >
         <div className="option-grid">
-          {(['Any', ...filterOptions.positions] as Array<Position | 'Any'>).map((position) => (
-            <button
-              key={position}
-              className={`pill ${filters.villainPositions.includes(position) ? 'active' : ''}`}
-              onClick={() => {
-                if (position === 'Any') {
-                  setFilters((prev) => ({ ...prev, villainPositions: ['Any'] }));
-                  return;
-                }
-                const current = filters.villainPositions.filter((item) => item !== 'Any');
-                toggleArrayValue<Position | 'Any'>(position, current, (value) =>
-                  setFilters((prev) => ({ ...prev, villainPositions: value.length ? value : ['Any'] })),
-                );
-              }}
-            >
-              {position}
-            </button>
+          {villainPositionOptions.map((position) => (
+            <OptionPill
+              key={position.value}
+              option={position}
+              active={filters.villainPositions.includes(position.value)}
+              onClick={() => undefined}
+            />
           ))}
         </div>
       </FilterCard>
@@ -289,12 +293,37 @@ function FilterCard({
           <div className="card-subtitle">{subtitle}</div>
         </div>
         <div>
-          {expanded && <button className="clear-btn" onClick={onClear}>Clear</button>}
+          {expanded && <button className="clear-btn" onClick={onClear}>Reset</button>}
           <button className="chevron" onClick={onToggle}>{expanded ? '⌃' : '⌄'}</button>
         </div>
       </div>
       {expanded && children}
     </section>
+  );
+}
+
+function OptionPill<T extends string | number>({
+  option,
+  active,
+  onClick,
+}: {
+  option: SelectableOption<T>;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      className={`pill ${active ? 'active' : ''} ${!option.enabled ? 'disabled' : ''}`}
+      onClick={() => {
+        if (!option.enabled) return;
+        onClick();
+      }}
+      disabled={!option.enabled}
+      title={option.reason}
+    >
+      <span>{option.label}</span>
+      {!option.enabled && <span className="coming-soon">{option.reason ?? 'Coming soon'}</span>}
+    </button>
   );
 }
 
