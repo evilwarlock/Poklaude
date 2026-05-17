@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "status": "dummy",
+  "description": "Static range manifest for the GitHub Pages MVP. Files are placeholders until real chart data is uploaded.",
+  "ranges": [
+    {
+      "id": "20bb-rfi-btn",
+      "title": "20bb BTN RFI",
+      "spotType": "RFI",
+      "position": "BTN",
+      "stackDepthBb": 20,
+      "path": "data/ranges/20bb-rfi-btn.json",
+      "priority": 1,
+      "status": "dummy"
+    },
+    {
+      "id": "20bb-rfi-co",
+      "title": "20bb CO RFI",
+      "spotType": "RFI",
+      "position": "CO",
+      "stackDepthBb": 20,
+      "path": "data/ranges/20bb-rfi-co.json",
+      "priority": 2,
+      "status": "dummy"
+    },
+    {
+      "id": "20bb-rfi-sb",
+      "title": "20bb SB RFI",
+      "spotType": "RFI",
+      "position": "SB",
+      "stackDepthBb": 20,
+      "path": "data/ranges/20bb-rfi-sb.json",
+      "priority": 3,
+      "status": "dummy"
+    },
+    {
+      "id": "20bb-rfi-hj",
+      "title": "20bb HJ RFI",
+      "spotType": "RFI",
+      "position": "HJ",
+      "stackDepthBb": 20,
+      "path": "data/ranges/20bb-rfi-hj.json",
+      "priority": 4,
+      "status": "dummy"
+    },
+    {
+      "id": "20bb-rfi-utg1",
+      "title": "20bb UTG1 RFI",
+      "spotType": "RFI",
+      "position": "UTG+1",
+      "stackDepthBb": 20,
+      "path": "data/ranges/20bb-rfi-utg1.json",
+      "priority": 5,
+      "status": "dummy"
+    },
+    {
+      "id": "20bb-rfi-utg",
+      "title": "20bb UTG RFI",
+      "spotType": "RFI",
+      "position": "UTG",
+      "stackDepthBb": 20,
+      "path": "data/ranges/20bb-rfi-utg.json",
+      "priority": 6,
+      "status": "dummy"
+    }
+  ]
+}
