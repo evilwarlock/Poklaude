@@ -137,7 +137,7 @@ export default function Home() {
   return (
     <main className="app-shell">
       <TopBar />
-      <h1>GTO Drills</h1>
+      <h1>Poklaude</h1>
       <p className="subtitle">Configure your preflop training session</p>
 
       <section className="card">
@@ -260,7 +260,7 @@ export default function Home() {
 function TopBar() {
   return (
     <div className="topbar">
-      <div className="logo">♠</div>
+      <div className="logo">♠ Poklaude</div>
       <div className="avatar">Y</div>
     </div>
   );
@@ -327,6 +327,16 @@ function OptionPill<T extends string | number>({
   );
 }
 
+const tableSeats: Array<{ position: Position; label: string; className: string }> = [
+  { position: 'SB', label: 'SB', className: 'seat-sb' },
+  { position: 'BB', label: 'BB', className: 'seat-bb' },
+  { position: 'UTG', label: 'UTG', className: 'seat-utg' },
+  { position: 'UTG+1', label: 'UTG1', className: 'seat-utg1' },
+  { position: 'HJ', label: 'HJ', className: 'seat-hj' },
+  { position: 'CO', label: 'CO', className: 'seat-co' },
+  { position: 'BTN', label: 'BTN', className: 'seat-btn' },
+];
+
 function DrillScreen({
   question,
   feedback,
@@ -346,14 +356,18 @@ function DrillScreen({
     <main className="drill-shell">
       <button className="back-btn" onClick={onBack}>←</button>
       <div className="table">
-        <div className="seat" style={{ left: '-30px', top: '130px' }}>UTG</div>
-        <div className="seat" style={{ left: '-42px', top: '250px' }}>HJ</div>
-        <div className="seat" style={{ right: '-42px', top: '250px' }}>CO</div>
-        <div className="seat villain">{question.villainPosition ?? 'SB'}<br />17 bb</div>
-        <div className="seat hero">{question.heroPosition}<br />{question.stackDepth - 1} bb</div>
+        {tableSeats.map((seat) => {
+          const isHero = seat.position === question.heroPosition;
+          return (
+            <div className={`seat ${seat.className} ${isHero ? 'hero' : ''}`} key={seat.position}>
+              {seat.label}
+              {isHero && <><br />{question.stackDepth} bb</>}
+            </div>
+          );
+        })}
         <div className="spot-title">
           <div className="pot">● {question.potBb.toFixed(2)} bb ⓘ</div>
-          <div>{question.scenario} {question.villainPosition ? `vs ${question.villainPosition}` : ''} at {question.stackDepth}bb</div>
+          <div>{displayPosition(question.heroPosition)} RFI at {question.stackDepth}bb</div>
         </div>
         <div className="cards">
           <div className={`card-face ${question.cards[0].includes('♥') || question.cards[0].includes('♦') ? 'red' : ''}`}>{question.cards[0]}</div>
@@ -394,6 +408,10 @@ function toggleArrayValue<T>(value: T, current: T[], onChange: (next: T[]) => vo
   } else {
     onChange([...current, value]);
   }
+}
+
+function displayPosition(position: Position) {
+  return position === 'UTG+1' ? 'UTG1' : position;
 }
 
 function scenarioDescription(scenario: Scenario) {
