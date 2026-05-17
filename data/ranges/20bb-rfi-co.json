@@ -1,0 +1,32 @@
+{
+  "id": "20bb-rfi-co",
+  "title": "20bb CO RFI",
+  "spotType": "RFI",
+  "position": "CO",
+  "stackDepthBb": 20,
+  "actions": ["raise", "fold"],
+  "status": "dummy",
+  "source": {
+    "type": "manual_placeholder",
+    "label": "Dummy placeholder data"
+  },
+  "hands": {
+    "AA": { "action": "raise", "frequency": 1, "notes": "dummy" },
+    "AKs": { "action": "raise", "frequency": 1, "notes": "dummy" },
+    "AQs": { "action": "raise", "frequency": 1, "notes": "dummy" },
+    "A5s": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
+    "A4s": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
+    "K9s": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
+    "K8s": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
+    "QTs": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
+    "Q9s": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
+    "JTs": { "action": "raise", "frequency": 1, "notes": "dummy" },
+    "AJo": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
+    "ATo": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
+    "KQo": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
+    "KJo": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
+    "66": { "action": "raise", "frequency": 1, "notes": "dummy boundary" },
+    "55": { "action": "fold", "frequency": 0, "notes": "dummy boundary" },
+    "72o": { "action": "fold", "frequency": 0, "notes": "dummy" }
+  }
+}
