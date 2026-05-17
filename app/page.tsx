@@ -1,0 +1,381 @@
+'use client';
+
+import { useEffect, useMemo, useState } from 'react';
+import {
+  DrillAction,
+  DrillAttempt,
+  DrillQuestion,
+  Position,
+  Scenario,
+  TrainingFilters,
+  defaultFilters,
+  filterOptions,
+  pickNextQuestion,
+  summarizeWeakness,
+} from '@/lib/poker';
+
+type ExpandedSection = 'scenario' | 'stack' | 'hero' | 'villain' | null;
+type Screen = 'setup' | 'drill' | 'results';
+
+const storageKey = 'poklaude_attempts_v1';
+
+export default function Home() {
+  const [screen, setScreen] = useState<Screen>('setup');
+  const [expanded, setExpanded] = useState<ExpandedSection>('stack');
+  const [filters, setFilters] = useState<TrainingFilters>(defaultFilters);
+  const [attempts, setAttempts] = useState<DrillAttempt[]>([]);
+  const [currentQuestion, setCurrentQuestion] = useState<DrillQuestion | null>(null);
+  const [feedback, setFeedback] = useState<DrillAttempt | null>(null);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem(storageKey);
+    if (stored) {
+      setAttempts(JSON.parse(stored) as DrillAttempt[]);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem(storageKey, JSON.stringify(attempts));
+  }, [attempts]);
+
+  const summary = useMemo(() => summarizeWeakness(attempts), [attempts]);
+
+  function startTraining() {
+    const next = pickNextQuestion(filters, attempts);
+    setCurrentQuestion(next);
+    setFeedback(null);
+    setScreen('drill');
+  }
+
+  function answerQuestion(action: DrillAction) {
+    if (!currentQuestion) return;
+
+    const attempt: DrillAttempt = {
+      ...currentQuestion,
+      userAction: action,
+      isCorrect: action === currentQuestion.correctAction,
+      createdAt: new Date().toISOString(),
+    };
+
+    setFeedback(attempt);
+    setAttempts((prev) => [attempt, ...prev]);
+  }
+
+  function nextQuestion() {
+    const next = pickNextQuestion(filters, attempts);
+    setCurrentQuestion(next);
+    setFeedback(null);
+  }
+
+  if (screen === 'drill' && currentQuestion) {
+    return (
+      <DrillScreen
+        question={currentQuestion}
+        feedback={feedback}
+        onBack={() => setScreen('setup')}
+        onAnswer={answerQuestion}
+        onNext={nextQuestion}
+        onResults={() => setScreen('results')}
+      />
+    );
+  }
+
+  if (screen === 'results') {
+    return (
+      <main className="app-shell">
+        <TopBar />
+        <h1>Training Results</h1>
+        <p className="subtitle">Local browser stats for the current MVP.</p>
+        <section className="results">
+          <div className="metric">
+            <div className="metric-value">{summary.accuracy}%</div>
+            <div className="metric-label">Accuracy</div>
+          </div>
+          <div className="metric">
+            <div className="metric-value">{summary.total}</div>
+            <div className="metric-label">Total attempts</div>
+          </div>
+          <div className="metric">
+            <div className="metric-value">{summary.mistakes}</div>
+            <div className="metric-label">Mistakes</div>
+          </div>
+        </section>
+        <section className="card">
+          <div className="card-title">Weak Spots</div>
+          <p className="card-subtitle">These will be weighted first in the next session.</p>
+          {summary.weakSpots.length === 0 ? (
+            <p>No mistakes yet.</p>
+          ) : (
+            <div className="scenario-list">
+              {summary.weakSpots.map((spot) => (
+                <div className="scenario-row" key={spot.label}>
+                  <span>
+                    <span className="scenario-name">{spot.label}</span>
+                    <span className="scenario-desc">Missed {spot.count} time{spot.count > 1 ? 's' : ''}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+        <button className="start-bar" onClick={startTraining}>▶ Continue Training</button>
+      </main>
+    );
+  }
+
+  return (
+    <main className="app-shell">
+      <TopBar />
+      <h1>GTO Drills</h1>
+      <p className="subtitle">Configure your preflop training session</p>
+
+      <section className="card">
+        <div className="card-header">
+          <div>
+            <div className="card-title">Close Spots Only</div>
+            <div className="card-subtitle">Practice only hands near the range boundary</div>
+          </div>
+          <button
+            className={`toggle ${filters.closeSpotsOnly ? 'on' : ''}`}
+            onClick={() => setFilters((prev) => ({ ...prev, closeSpotsOnly: !prev.closeSpotsOnly }))}
+            aria-label="Toggle close spots only"
+          >
+            <span className="knob" />
+          </button>
+        </div>
+      </section>
+
+      <FilterCard
+        title="Scenario"
+        count={filters.scenarios.length}
+        subtitle={filters.scenarios.length === filterOptions.scenarios.length ? 'All contexts' : filters.scenarios.join(', ')}
+        expanded={expanded === 'scenario'}
+        onToggle={() => setExpanded(expanded === 'scenario' ? null : 'scenario')}
+        onClear={() => setFilters((prev) => ({ ...prev, scenarios: [] }))}
+      >
+        <div className="scenario-list">
+          {filterOptions.scenarios.map((scenario) => (
+            <button
+              key={scenario}
+              className="scenario-row"
+              onClick={() => toggleArrayValue<Scenario>(scenario, filters.scenarios, (value) =>
+                setFilters((prev) => ({ ...prev, scenarios: value })),
+              )}
+            >
+              <span>
+                <span className="scenario-name">{scenario}</span>
+                <span className="scenario-desc">{scenarioDescription(scenario)}</span>
+              </span>
+              {filters.scenarios.includes(scenario) && <span className="check">✓</span>}
+            </button>
+          ))}
+        </div>
+      </FilterCard>
+
+      <FilterCard
+        title="Stack Depth"
+        count={filters.stackDepths.length}
+        subtitle={filters.stackDepths.length === filterOptions.stacks.length ? 'All depths' : `${filters.stackDepths.join(', ')} BB`}
+        expanded={expanded === 'stack'}
+        onToggle={() => setExpanded(expanded === 'stack' ? null : 'stack')}
+        onClear={() => setFilters((prev) => ({ ...prev, stackDepths: [] }))}
+      >
+        <div className="option-grid">
+          {filterOptions.stacks.map((stack) => (
+            <button
+              key={stack}
+              className={`pill ${filters.stackDepths.includes(stack) ? 'active' : ''}`}
+              onClick={() => toggleArrayValue<number>(stack, filters.stackDepths, (value) =>
+                setFilters((prev) => ({ ...prev, stackDepths: value })),
+              )}
+            >
+              {stack} BB
+            </button>
+          ))}
+        </div>
+      </FilterCard>
+
+      <FilterCard
+        title="Hero Position"
+        count={filters.heroPositions.length}
+        subtitle={filters.heroPositions.length === filterOptions.positions.length ? 'All positions' : filters.heroPositions.join(', ')}
+        expanded={expanded === 'hero'}
+        onToggle={() => setExpanded(expanded === 'hero' ? null : 'hero')}
+        onClear={() => setFilters((prev) => ({ ...prev, heroPositions: [] }))}
+      >
+        <div className="option-grid">
+          {filterOptions.positions.map((position) => (
+            <button
+              key={position}
+              className={`pill ${filters.heroPositions.includes(position) ? 'active' : ''}`}
+              onClick={() => toggleArrayValue<Position>(position, filters.heroPositions, (value) =>
+                setFilters((prev) => ({ ...prev, heroPositions: value })),
+              )}
+            >
+              {position}
+            </button>
+          ))}
+        </div>
+      </FilterCard>
+
+      <FilterCard
+        title="Villain Position"
+        count={filters.villainPositions.length}
+        subtitle={filters.villainPositions.includes('Any') ? 'Any random' : filters.villainPositions.join(', ')}
+        expanded={expanded === 'villain'}
+        onToggle={() => setExpanded(expanded === 'villain' ? null : 'villain')}
+        onClear={() => setFilters((prev) => ({ ...prev, villainPositions: ['Any'] }))}
+      >
+        <div className="option-grid">
+          {(['Any', ...filterOptions.positions] as Array<Position | 'Any'>).map((position) => (
+            <button
+              key={position}
+              className={`pill ${filters.villainPositions.includes(position) ? 'active' : ''}`}
+              onClick={() => {
+                if (position === 'Any') {
+                  setFilters((prev) => ({ ...prev, villainPositions: ['Any'] }));
+                  return;
+                }
+                const current = filters.villainPositions.filter((item) => item !== 'Any');
+                toggleArrayValue<Position | 'Any'>(position, current, (value) =>
+                  setFilters((prev) => ({ ...prev, villainPositions: value.length ? value : ['Any'] })),
+                );
+              }}
+            >
+              {position}
+            </button>
+          ))}
+        </div>
+      </FilterCard>
+
+      <button className="start-bar" onClick={startTraining}>▶ Start Training</button>
+    </main>
+  );
+}
+
+function TopBar() {
+  return (
+    <div className="topbar">
+      <div className="logo">♠</div>
+      <div className="avatar">Y</div>
+    </div>
+  );
+}
+
+function FilterCard({
+  title,
+  count,
+  subtitle,
+  expanded,
+  onToggle,
+  onClear,
+  children,
+}: {
+  title: string;
+  count: number;
+  subtitle: string;
+  expanded: boolean;
+  onToggle: () => void;
+  onClear: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="card">
+      <div className="card-header">
+        <div>
+          <div className="card-title">
+            {title} <span className="badge">{count}</span>
+          </div>
+          <div className="card-subtitle">{subtitle}</div>
+        </div>
+        <div>
+          {expanded && <button className="clear-btn" onClick={onClear}>Clear</button>}
+          <button className="chevron" onClick={onToggle}>{expanded ? '⌃' : '⌄'}</button>
+        </div>
+      </div>
+      {expanded && children}
+    </section>
+  );
+}
+
+function DrillScreen({
+  question,
+  feedback,
+  onBack,
+  onAnswer,
+  onNext,
+  onResults,
+}: {
+  question: DrillQuestion;
+  feedback: DrillAttempt | null;
+  onBack: () => void;
+  onAnswer: (action: DrillAction) => void;
+  onNext: () => void;
+  onResults: () => void;
+}) {
+  return (
+    <main className="drill-shell">
+      <button className="back-btn" onClick={onBack}>←</button>
+      <div className="table">
+        <div className="seat" style={{ left: '-30px', top: '130px' }}>UTG</div>
+        <div className="seat" style={{ left: '-42px', top: '250px' }}>HJ</div>
+        <div className="seat" style={{ right: '-42px', top: '250px' }}>CO</div>
+        <div className="seat villain">{question.villainPosition ?? 'SB'}<br />17 bb</div>
+        <div className="seat hero">{question.heroPosition}<br />{question.stackDepth - 1} bb</div>
+        <div className="spot-title">
+          <div className="pot">● {question.potBb.toFixed(2)} bb ⓘ</div>
+          <div>{question.scenario} {question.villainPosition ? `vs ${question.villainPosition}` : ''} at {question.stackDepth}bb</div>
+        </div>
+        <div className="cards">
+          <div className={`card-face ${question.cards[0].includes('♥') || question.cards[0].includes('♦') ? 'red' : ''}`}>{question.cards[0]}</div>
+          <div className={`card-face ${question.cards[1].includes('♥') || question.cards[1].includes('♦') ? 'red' : ''}`}>{question.cards[1]}</div>
+        </div>
+      </div>
+
+      <section className="action-panel">
+        {feedback ? (
+          <div className={`feedback ${feedback.isCorrect ? '' : 'bad'}`}>
+            <div className="feedback-title">{feedback.isCorrect ? '✓ Correct' : '✕ Incorrect'}</div>
+            <div className="feedback-text">
+              Your choice: {feedback.userAction}<br />
+              Correct: {feedback.correctAction} ({Math.round(feedback.frequency * 100)}%)<br />
+              EV: {feedback.evBb.toFixed(2)} bb<br />
+              {feedback.explanation}
+            </div>
+            <div className="actions" style={{ marginTop: 14 }}>
+              <button className="action-btn" onClick={onResults}>Results</button>
+              <button className="action-btn" onClick={onNext}>Next</button>
+            </div>
+          </div>
+        ) : (
+          <div className="actions">
+            {question.actions.map((action) => (
+              <button className="action-btn" key={action} onClick={() => onAnswer(action)}>{action}</button>
+            ))}
+          </div>
+        )}
+      </section>
+    </main>
+  );
+}
+
+function toggleArrayValue<T>(value: T, current: T[], onChange: (next: T[]) => void) {
+  if (current.includes(value)) {
+    onChange(current.filter((item) => item !== value));
+  } else {
+    onChange([...current, value]);
+  }
+}
+
+function scenarioDescription(scenario: Scenario) {
+  switch (scenario) {
+    case 'RFI':
+      return 'Open raising first in';
+    case 'BB Defense':
+      return 'Defending from big blind';
+    case 'vs RFI':
+      return 'Facing an open raise';
+    case 'vs 3-Bet':
+      return 'Facing a 3-bet after you raised';
+  }
+}
