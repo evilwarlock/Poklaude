@@ -43,6 +43,7 @@ type Availability<T extends string | number> = {
 const scenarios: Scenario[] = ['RFI', 'BB Defense', 'vs RFI', 'vs 3-Bet'];
 const stacks = [10, 15, 20, 32, 40, 60, 100];
 const positions: Position[] = ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB'];
+const rfiPositions: Position[] = ['UTG', 'UTG+1', 'HJ', 'CO', 'BTN', 'SB'];
 
 const mvpDisabledReason = 'Coming soon';
 
@@ -65,9 +66,9 @@ export const stackOptions: Array<Availability<number>> = [
 
 export const positionOptions: Array<Availability<Position>> = [
   { value: 'UTG', label: 'UTG', enabled: true },
-  { value: 'UTG+1', label: 'UTG+1', enabled: true },
-  { value: 'UTG+2', label: 'UTG+2', enabled: true },
-  { value: 'LJ', label: 'LJ', enabled: true },
+  { value: 'UTG+1', label: 'UTG1', enabled: true },
+  { value: 'UTG+2', label: 'UTG2', enabled: false, reason: 'Not shown in the current 7-seat RFI layout' },
+  { value: 'LJ', label: 'LJ', enabled: false, reason: 'Not shown in the current 7-seat RFI layout' },
   { value: 'HJ', label: 'HJ', enabled: true },
   { value: 'CO', label: 'CO', enabled: true },
   { value: 'BTN', label: 'BTN', enabled: true },
@@ -79,153 +80,85 @@ export const villainPositionOptions: Array<Availability<Position | 'Any'>> = [
   { value: 'Any', label: 'Any', enabled: false, reason: 'Only RFI drills are supported in the MVP' },
   ...positions.map((position) => ({
     value: position,
-    label: position,
+    label: position === 'UTG+1' ? 'UTG1' : position,
     enabled: false,
     reason: 'Only RFI drills are supported in the MVP',
   })),
 ];
 
-const seededQuestions: DrillQuestion[] = [
+const rfiBoundaryHands: Array<{
+  hand: string;
+  cards: [string, string];
+  correctAction: DrillAction;
+  frequency: number;
+  evBb: number;
+  boundaryScore: number;
+  explanation: string;
+}> = [
   {
-    id: 'rfi-20-utg-a5s',
-    scenario: 'RFI',
-    stackDepth: 20,
-    heroPosition: 'UTG',
-    potBb: 1.5,
     hand: 'A5s',
     cards: ['A♠', '5♠'],
-    actions: ['Raise', 'Fold'],
     correctAction: 'Raise',
     frequency: 1,
     evBb: 0.22,
     boundaryScore: 0.8,
-    explanation: 'A5s is a bottom suited-ace open in the seeded 20bb UTG range, so it is a useful boundary drill.',
+    explanation: 'A5s is a bottom suited-ace open in the seeded 20bb RFI range, so it is a useful boundary drill.',
   },
   {
-    id: 'rfi-20-utg-k7s',
-    scenario: 'RFI',
-    stackDepth: 20,
-    heroPosition: 'UTG',
-    potBb: 1.5,
     hand: 'K7s',
     cards: ['K♣', '7♣'],
-    actions: ['Raise', 'Fold'],
     correctAction: 'Fold',
     frequency: 0,
     evBb: -0.08,
     boundaryScore: 0.85,
-    explanation: 'K7s sits just outside the 20bb UTG open range in this seed data. Fold is the target answer.',
+    explanation: 'K7s sits just outside the seeded 20bb RFI open range. Fold is the target answer.',
   },
   {
-    id: 'rfi-20-utg-55',
-    scenario: 'RFI',
-    stackDepth: 20,
-    heroPosition: 'UTG',
-    potBb: 1.5,
     hand: '55',
     cards: ['5♠', '5♥'],
-    actions: ['Raise', 'Fold'],
     correctAction: 'Raise',
     frequency: 1,
     evBb: 0.18,
     boundaryScore: 0.75,
-    explanation: '55 is included in the seeded 20bb UTG open range. Lower pairs become the close region.',
+    explanation: '55 is included in the seeded 20bb RFI open range. Lower pairs become the close region.',
   },
   {
-    id: 'rfi-20-utg-44',
-    scenario: 'RFI',
-    stackDepth: 20,
-    heroPosition: 'UTG',
-    potBb: 1.5,
     hand: '44',
     cards: ['4♣', '4♦'],
-    actions: ['Raise', 'Fold'],
     correctAction: 'Fold',
     frequency: 0,
     evBb: -0.05,
     boundaryScore: 0.9,
-    explanation: '44 is a classic threshold hand. In this seeded chart it is below the UTG 20bb open cutoff.',
+    explanation: '44 is a classic threshold hand. In this seeded chart it is below the 20bb RFI open cutoff.',
   },
   {
-    id: 'rfi-20-btn-k8s',
-    scenario: 'RFI',
-    stackDepth: 20,
-    heroPosition: 'BTN',
-    potBb: 1.5,
     hand: 'K8s',
     cards: ['K♦', '8♦'],
-    actions: ['Raise', 'Fold'],
     correctAction: 'Raise',
     frequency: 1,
     evBb: 0.3,
     boundaryScore: 0.72,
-    explanation: 'BTN opens wider than UTG. K8s is a reasonable continue/open candidate in the seed set.',
-  },
-  {
-    id: 'bbdef-20-vs-sb-acjd',
-    scenario: 'BB Defense',
-    stackDepth: 20,
-    heroPosition: 'BB',
-    villainPosition: 'SB',
-    potBb: 4,
-    hand: 'AJo',
-    cards: ['A♣', 'J♦'],
-    actions: ['All-In', 'Call', 'Fold'],
-    correctAction: 'All-In',
-    frequency: 1,
-    evBb: 3.83,
-    boundaryScore: 0.35,
-    explanation: 'AJo is strong enough to continue aggressively versus SB at 20bb in the seed drill set.',
-  },
-  {
-    id: 'bbdef-20-vs-sb-q8o',
-    scenario: 'BB Defense',
-    stackDepth: 20,
-    heroPosition: 'BB',
-    villainPosition: 'SB',
-    potBb: 4,
-    hand: 'Q8o',
-    cards: ['Q♠', '8♦'],
-    actions: ['All-In', 'Call', 'Fold'],
-    correctAction: 'Call',
-    frequency: 1,
-    evBb: 0.16,
-    boundaryScore: 0.78,
-    explanation: 'Q8o is close and should usually defend versus SB in the current seed data.',
-  },
-  {
-    id: 'vsrfi-20-btn-vs-hj-a9o',
-    scenario: 'vs RFI',
-    stackDepth: 20,
-    heroPosition: 'BTN',
-    villainPosition: 'HJ',
-    potBb: 3.5,
-    hand: 'A9o',
-    cards: ['A♥', '9♣'],
-    actions: ['All-In', 'Call', 'Fold'],
-    correctAction: 'Fold',
-    frequency: 0,
-    evBb: -0.12,
-    boundaryScore: 0.82,
-    explanation: 'A9o looks tempting but is below the seeded BTN versus HJ RFI continue threshold.',
-  },
-  {
-    id: 'vs3bet-20-co-kqs',
-    scenario: 'vs 3-Bet',
-    stackDepth: 20,
-    heroPosition: 'CO',
-    villainPosition: 'BTN',
-    potBb: 7.5,
-    hand: 'KQs',
-    cards: ['K♠', 'Q♠'],
-    actions: ['All-In', 'Call', 'Fold'],
-    correctAction: 'All-In',
-    frequency: 1,
-    evBb: 0.62,
-    boundaryScore: 0.55,
-    explanation: 'KQs performs well enough to continue aggressively versus a BTN 3-bet in this seed spot.',
+    explanation: 'K8s is a useful suited-king boundary hand in the seeded 20bb RFI drills.',
   },
 ];
+
+const seededQuestions: DrillQuestion[] = rfiPositions.flatMap((position) =>
+  rfiBoundaryHands.map((spot) => ({
+    id: `rfi-20-${position.toLowerCase().replace('+', '')}-${spot.hand.toLowerCase()}`,
+    scenario: 'RFI' as const,
+    stackDepth: 20,
+    heroPosition: position,
+    potBb: 1.5,
+    hand: spot.hand,
+    cards: spot.cards,
+    actions: ['Raise', 'Fold'] as DrillAction[],
+    correctAction: spot.correctAction,
+    frequency: spot.frequency,
+    evBb: spot.evBb,
+    boundaryScore: spot.boundaryScore,
+    explanation: `${displayPosition(position)} 20bb RFI: ${spot.explanation}`,
+  })),
+);
 
 export const filterOptions = { scenarios, stacks, positions };
 
@@ -244,11 +177,8 @@ export function getCandidateQuestions(filters: TrainingFilters, attempts: DrillA
     const scenarioOk = filters.scenarios.includes(question.scenario);
     const stackOk = filters.stackDepths.includes(question.stackDepth);
     const heroOk = filters.heroPositions.includes(question.heroPosition);
-    const villainOk =
-      filters.villainPositions.includes('Any') ||
-      (question.villainPosition ? filters.villainPositions.includes(question.villainPosition) : true);
     const closeOk = !filters.closeSpotsOnly || question.boundaryScore >= 0.7;
-    return scenarioOk && stackOk && heroOk && villainOk && closeOk;
+    return scenarioOk && stackOk && heroOk && closeOk;
   });
 
   return [...filtered].sort((a, b) => {
@@ -260,7 +190,7 @@ export function getCandidateQuestions(filters: TrainingFilters, attempts: DrillA
 
 export function pickNextQuestion(filters: TrainingFilters, attempts: DrillAttempt[]): DrillQuestion {
   const candidates = getCandidateQuestions(filters, attempts);
-  const pool = candidates.length > 0 ? candidates : seededQuestions.filter((question) => question.scenario === 'RFI' && question.stackDepth === 20);
+  const pool = candidates.length > 0 ? candidates : seededQuestions;
   const askedCounts = new Map<string, number>();
   attempts.forEach((attempt) => askedCounts.set(attempt.id, (askedCounts.get(attempt.id) ?? 0) + 1));
 
@@ -279,7 +209,7 @@ export function summarizeWeakness(attempts: DrillAttempt[]) {
   const accuracy = total === 0 ? 0 : Math.round(((total - mistakes.length) / total) * 100);
 
   const grouped = mistakes.reduce<Record<string, number>>((acc, attempt) => {
-    const key = `${attempt.scenario} / ${attempt.heroPosition} / ${attempt.hand}`;
+    const key = `${attempt.scenario} / ${displayPosition(attempt.heroPosition)} / ${attempt.hand}`;
     acc[key] = (acc[key] ?? 0) + 1;
     return acc;
   }, {});
@@ -290,4 +220,8 @@ export function summarizeWeakness(attempts: DrillAttempt[]) {
     .map(([label, count]) => ({ label, count }));
 
   return { total, mistakes: mistakes.length, accuracy, weakSpots };
+}
+
+function displayPosition(position: Position) {
+  return position === 'UTG+1' ? 'UTG1' : position;
 }
