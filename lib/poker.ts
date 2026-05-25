@@ -1,3 +1,10 @@
+import btn from '@/data/ranges/20bb-rfi-btn.json';
+import co from '@/data/ranges/20bb-rfi-co.json';
+import hj from '@/data/ranges/20bb-rfi-hj.json';
+import sb from '@/data/ranges/20bb-rfi-sb.json';
+import utg from '@/data/ranges/20bb-rfi-utg.json';
+import utg1 from '@/data/ranges/20bb-rfi-utg1.json';
+
 export type Scenario = 'RFI' | 'BB Defense' | 'vs RFI' | 'vs 3-Bet';
 export type Position = 'UTG' | 'UTG+1' | 'UTG+2' | 'LJ' | 'HJ' | 'CO' | 'BTN' | 'SB' | 'BB';
 export type DrillAction = 'Raise' | 'Fold' | 'All-In' | 'Call';
@@ -86,78 +93,44 @@ export const villainPositionOptions: Array<Availability<Position | 'Any'>> = [
   })),
 ];
 
-const rfiBoundaryHands: Array<{
-  hand: string;
-  cards: [string, string];
-  correctAction: DrillAction;
-  frequency: number;
-  evBb: number;
-  boundaryScore: number;
-  explanation: string;
-}> = [
-  {
-    hand: 'A5s',
-    cards: ['A♠', '5♠'],
-    correctAction: 'Raise',
-    frequency: 1,
-    evBb: 0.22,
-    boundaryScore: 0.8,
-    explanation: 'A5s is a bottom suited-ace open in the seeded 20bb RFI range, so it is a useful boundary drill.',
-  },
-  {
-    hand: 'K7s',
-    cards: ['K♣', '7♣'],
-    correctAction: 'Fold',
-    frequency: 0,
-    evBb: -0.08,
-    boundaryScore: 0.85,
-    explanation: 'K7s sits just outside the seeded 20bb RFI open range. Fold is the target answer.',
-  },
-  {
-    hand: '55',
-    cards: ['5♠', '5♥'],
-    correctAction: 'Raise',
-    frequency: 1,
-    evBb: 0.18,
-    boundaryScore: 0.75,
-    explanation: '55 is included in the seeded 20bb RFI open range. Lower pairs become the close region.',
-  },
-  {
-    hand: '44',
-    cards: ['4♣', '4♦'],
-    correctAction: 'Fold',
-    frequency: 0,
-    evBb: -0.05,
-    boundaryScore: 0.9,
-    explanation: '44 is a classic threshold hand. In this seeded chart it is below the 20bb RFI open cutoff.',
-  },
-  {
-    hand: 'K8s',
-    cards: ['K♦', '8♦'],
-    correctAction: 'Raise',
-    frequency: 1,
-    evBb: 0.3,
-    boundaryScore: 0.72,
-    explanation: 'K8s is a useful suited-king boundary hand in the seeded 20bb RFI drills.',
-  },
-];
+type RangeFile = {
+  position: string;
+  stackDepthBb: number;
+  hands: Record<string, { action: string; frequency: number; boundaryScore?: number }>;
+};
 
-const seededQuestions: DrillQuestion[] = rfiPositions.flatMap((position) =>
-  rfiBoundaryHands.map((spot) => ({
-    id: `rfi-20-${position.toLowerCase().replace('+', '')}-${spot.hand.toLowerCase()}`,
-    scenario: 'RFI' as const,
-    stackDepth: 20,
-    heroPosition: position,
-    potBb: 1.5,
-    hand: spot.hand,
-    cards: spot.cards,
-    actions: ['Raise', 'Fold'] as DrillAction[],
-    correctAction: spot.correctAction,
-    frequency: spot.frequency,
-    evBb: spot.evBb,
-    boundaryScore: spot.boundaryScore,
-    explanation: `${displayPosition(position)} 20bb RFI: ${spot.explanation}`,
-  })),
+function cardsFromHand(hand: string): [string, string] {
+  const isPair = hand.length === 2;
+  const isSuited = hand.endsWith('s');
+  const r1 = hand[0], r2 = hand[1];
+  if (isPair) return [`${r1}♠`, `${r2}♥`];
+  if (isSuited) return [`${r1}♠`, `${r2}♠`];
+  return [`${r1}♠`, `${r2}♥`];
+}
+
+function rangeFileToQuestions(file: RangeFile): DrillQuestion[] {
+  const position = file.position as Position;
+  return Object.entries(file.hands)
+    .filter(([, h]) => h.boundaryScore !== undefined)
+    .map(([hand, h]) => ({
+      id: `rfi-${file.stackDepthBb}-${position.toLowerCase().replace('+', '')}-${hand.toLowerCase()}`,
+      scenario: 'RFI' as const,
+      stackDepth: file.stackDepthBb,
+      heroPosition: position,
+      potBb: 1.5,
+      hand,
+      cards: cardsFromHand(hand),
+      actions: ['Raise', 'Fold'] as DrillAction[],
+      correctAction: (h.action === 'raise' ? 'Raise' : 'Fold') as DrillAction,
+      frequency: h.frequency,
+      evBb: 0,
+      boundaryScore: h.boundaryScore!,
+      explanation: `${displayPosition(position)} ${file.stackDepthBb}bb RFI: ${hand} — ${h.action}`,
+    }));
+}
+
+const seededQuestions: DrillQuestion[] = [btn, co, hj, sb, utg, utg1].flatMap((f) =>
+  rangeFileToQuestions(f as RangeFile),
 );
 
 export const filterOptions = { scenarios, stacks, positions };
