@@ -200,7 +200,7 @@ export function pickNextQuestion(filters: TrainingFilters, attempts: DrillAttemp
     return aCount - bCount || b.boundaryScore - a.boundaryScore;
   });
 
-  return ranked[0];
+  return ranked[0] ?? candidates[0];
 }
 
 export function summarizeWeakness(attempts: DrillAttempt[]) {
