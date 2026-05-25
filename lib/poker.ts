@@ -4,6 +4,7 @@ import hj from '@/data/ranges/20bb-rfi-hj.json';
 import sb from '@/data/ranges/20bb-rfi-sb.json';
 import utg from '@/data/ranges/20bb-rfi-utg.json';
 import utg1 from '@/data/ranges/20bb-rfi-utg1.json';
+import utg2 from '@/data/ranges/20bb-rfi-utg2.json';
 
 export type Scenario = 'RFI' | 'BB Defense' | 'vs RFI' | 'vs 3-Bet';
 export type Position = 'UTG' | 'UTG+1' | 'UTG+2' | 'LJ' | 'HJ' | 'CO' | 'BTN' | 'SB' | 'BB';
@@ -74,7 +75,7 @@ export const stackOptions: Array<Availability<number>> = [
 export const positionOptions: Array<Availability<Position>> = [
   { value: 'UTG', label: 'UTG', enabled: true },
   { value: 'UTG+1', label: 'UTG1', enabled: true },
-  { value: 'UTG+2', label: 'UTG2', enabled: false, reason: 'Not shown in the current 7-seat RFI layout' },
+  { value: 'UTG+2', label: 'UTG2', enabled: true },
   { value: 'LJ', label: 'LJ', enabled: false, reason: 'Not shown in the current 7-seat RFI layout' },
   { value: 'HJ', label: 'HJ', enabled: true },
   { value: 'CO', label: 'CO', enabled: true },
@@ -129,7 +130,7 @@ function rangeFileToQuestions(file: RangeFile): DrillQuestion[] {
     }));
 }
 
-const seededQuestions: DrillQuestion[] = [btn, co, hj, sb, utg, utg1].flatMap((f) =>
+const seededQuestions: DrillQuestion[] = [btn, co, hj, sb, utg, utg1, utg2].flatMap((f) =>
   rangeFileToQuestions(f as RangeFile),
 );
 
