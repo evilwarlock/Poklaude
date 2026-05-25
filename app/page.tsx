@@ -225,7 +225,7 @@ export default function Home() {
         subtitle={filters.heroPositions.length === filterOptions.positions.length ? 'All positions' : filters.heroPositions.join(', ')}
         expanded={expanded === 'hero'}
         onToggle={() => setExpanded(expanded === 'hero' ? null : 'hero')}
-        onClear={() => setFilters((prev) => ({ ...prev, heroPositions: ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB'] }))}
+        onClear={() => setFilters((prev) => ({ ...prev, heroPositions: ['UTG', 'UTG+1', 'HJ', 'CO', 'BTN', 'SB'] }))}
       >
         <div className="option-grid">
           {positionOptions.map((position) => (
