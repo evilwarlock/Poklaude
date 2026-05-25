@@ -23,8 +23,12 @@ Open the local Next.js app and test the drill flow.
 - 20bb RFI only.
 - Raise/Fold drills from a seeded dataset.
 - Greyed-out unavailable options for future scenarios and stack depths.
-- Track attempts, accuracy, and weak spots in local browser storage.
+- Track attempts, accuracy, and weak spots in local browser storage (with error handling).
 - Mobile-first UI inspired by poker drill apps.
+
+## Development
+
+ESLint is configured (`npm run lint`). TypeScript strict mode is on.
 
 ## Docs
 

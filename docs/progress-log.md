@@ -77,6 +77,18 @@ PR:
 #3 Fix GitHub Pages install step without lockfile
 ```
 
+### 8. Added ESLint config
+
+Added `.eslintrc.json` extending `next/core-web-vitals`.
+
+### 9. Added localStorage error handling
+
+Wrapped all localStorage reads and writes in try/catch to handle environments where storage is unavailable or throws.
+
+### 10. Deduplicated displayPosition
+
+`displayPosition` is now exported from `lib/poker.ts`. The duplicate definition in `app/page.tsx` was removed.
+
 ### 7. Enabled GitHub Pages deployment
 
 GitHub Pages deployment initially failed with a 404 from `actions/deploy-pages`. The issue was repository settings: Pages needed to be enabled with source set to GitHub Actions.
@@ -94,7 +106,6 @@ Current known limitations:
 - No backend persistence
 - No Supabase integration
 - No AI image parsing
-- No lockfile committed yet
 
 ## Immediate next steps
 
