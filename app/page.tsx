@@ -16,6 +16,7 @@ import {
   stackOptions,
   summarizeWeakness,
   villainPositionOptions,
+  displayPosition,
 } from '@/lib/poker';
 
 type ExpandedSection = 'scenario' | 'stack' | 'hero' | 'villain' | null;
@@ -429,10 +430,6 @@ function toggleArrayValue<T>(value: T, current: T[], onChange: (next: T[]) => vo
   } else {
     onChange([...current, value]);
   }
-}
-
-function displayPosition(position: Position) {
-  return position === 'UTG+1' ? 'UTG1' : position;
 }
 
 function scenarioDescription(scenario: Scenario) {
