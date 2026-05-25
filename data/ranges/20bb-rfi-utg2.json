@@ -1,18 +1,17 @@
 {
-  "id": "20bb-rfi-btn",
-  "title": "20bb BTN RFI",
+  "id": "20bb-rfi-utg2",
+  "title": "20bb UTG2 RFI",
   "spotType": "RFI",
-  "position": "BTN",
+  "position": "UTG2",
   "stackDepthBb": 20,
   "actions": [
     "raise",
-    "jam",
     "fold"
   ],
   "status": "draft_from_image",
   "source": {
     "type": "uploaded_image",
-    "label": "20bb-rfi-btn.png"
+    "label": "20bb-rfi-utg2.png"
   },
   "boundaryRule": {
     "method": "right_neighbor_of_non_pure_fold",
@@ -50,12 +49,7 @@
     },
     "A7s": {
       "action": "raise",
-      "frequency": 0.57,
-      "frequencies": {
-        "raise": 0.57,
-        "jam": 0.43,
-        "fold": 0.0
-      }
+      "frequency": 1.0
     },
     "A6s": {
       "action": "raise",
@@ -111,27 +105,33 @@
     },
     "K6s": {
       "action": "raise",
-      "frequency": 1.0
+      "frequency": 0.7,
+      "frequencies": {
+        "raise": 0.7,
+        "fold": 0.3
+      }
     },
     "K5s": {
-      "action": "raise",
-      "frequency": 1.0
+      "action": "fold",
+      "frequency": 0.0,
+      "boundaryType": "borderline_fold",
+      "boundaryScore": 0.8,
+      "tags": [
+        "suited_king",
+        "boundary"
+      ]
     },
     "K4s": {
-      "action": "raise",
-      "frequency": 1.0
+      "action": "fold",
+      "frequency": 0.0
     },
     "K3s": {
-      "action": "raise",
-      "frequency": 1.0
+      "action": "fold",
+      "frequency": 0.0
     },
     "K2s": {
       "action": "fold",
-      "frequency": 0.76,
-      "frequencies": {
-        "raise": 0.24,
-        "fold": 0.76
-      }
+      "frequency": 0.0
     },
     "AQo": {
       "action": "raise",
@@ -139,12 +139,7 @@
     },
     "KQo": {
       "action": "raise",
-      "frequency": 0.94,
-      "frequencies": {
-        "raise": 0.94,
-        "jam": 0.06,
-        "fold": 0.0
-      }
+      "frequency": 1.0
     },
     "QQ": {
       "action": "raise",
@@ -152,12 +147,7 @@
     },
     "QJs": {
       "action": "raise",
-      "frequency": 0.63,
-      "frequencies": {
-        "raise": 0.63,
-        "jam": 0.37,
-        "fold": 0.0
-      }
+      "frequency": 1.0
     },
     "QTs": {
       "action": "raise",
@@ -165,33 +155,14 @@
     },
     "Q9s": {
       "action": "raise",
-      "frequency": 1.0
+      "frequency": 1.0,
+      "boundaryType": "borderline_raise",
+      "boundaryScore": 0.8,
+      "tags": [
+        "boundary"
+      ]
     },
     "Q8s": {
-      "action": "raise",
-      "frequency": 1.0
-    },
-    "Q7s": {
-      "action": "raise",
-      "frequency": 1.0
-    },
-    "Q6s": {
-      "action": "raise",
-      "frequency": 1.0
-    },
-    "Q5s": {
-      "action": "raise",
-      "frequency": 1.0
-    },
-    "Q4s": {
-      "action": "fold",
-      "frequency": 0.84,
-      "frequencies": {
-        "raise": 0.16,
-        "fold": 0.84
-      }
-    },
-    "Q3s": {
       "action": "fold",
       "frequency": 0.0,
       "boundaryType": "borderline_fold",
@@ -199,6 +170,26 @@
       "tags": [
         "boundary"
       ]
+    },
+    "Q7s": {
+      "action": "fold",
+      "frequency": 0.0
+    },
+    "Q6s": {
+      "action": "fold",
+      "frequency": 0.0
+    },
+    "Q5s": {
+      "action": "fold",
+      "frequency": 0.0
+    },
+    "Q4s": {
+      "action": "fold",
+      "frequency": 0.0
+    },
+    "Q3s": {
+      "action": "fold",
+      "frequency": 0.0
     },
     "Q2s": {
       "action": "fold",
@@ -222,42 +213,18 @@
     },
     "JTs": {
       "action": "raise",
-      "frequency": 0.59,
-      "frequencies": {
-        "raise": 0.59,
-        "jam": 0.41,
-        "fold": 0.0
-      }
+      "frequency": 1.0
     },
     "J9s": {
       "action": "raise",
-      "frequency": 1.0
+      "frequency": 1.0,
+      "boundaryType": "borderline_raise",
+      "boundaryScore": 0.8,
+      "tags": [
+        "boundary"
+      ]
     },
     "J8s": {
-      "action": "raise",
-      "frequency": 1.0
-    },
-    "J7s": {
-      "action": "raise",
-      "frequency": 1.0
-    },
-    "J6s": {
-      "action": "raise",
-      "frequency": 0.65,
-      "frequencies": {
-        "raise": 0.65,
-        "fold": 0.35
-      }
-    },
-    "J5s": {
-      "action": "fold",
-      "frequency": 0.74,
-      "frequencies": {
-        "raise": 0.26,
-        "fold": 0.74
-      }
-    },
-    "J4s": {
       "action": "fold",
       "frequency": 0.0,
       "boundaryType": "borderline_fold",
@@ -265,6 +232,22 @@
       "tags": [
         "boundary"
       ]
+    },
+    "J7s": {
+      "action": "fold",
+      "frequency": 0.0
+    },
+    "J6s": {
+      "action": "fold",
+      "frequency": 0.0
+    },
+    "J5s": {
+      "action": "fold",
+      "frequency": 0.0
+    },
+    "J4s": {
+      "action": "fold",
+      "frequency": 0.0
     },
     "J3s": {
       "action": "fold",
@@ -287,8 +270,12 @@
       "frequency": 1.0
     },
     "JTo": {
-      "action": "raise",
-      "frequency": 1.0
+      "action": "fold",
+      "frequency": 0.85,
+      "frequencies": {
+        "raise": 0.15,
+        "fold": 0.85
+      }
     },
     "TT": {
       "action": "raise",
@@ -296,25 +283,13 @@
     },
     "T9s": {
       "action": "raise",
-      "frequency": 1.0
-    },
-    "T8s": {
-      "action": "raise",
-      "frequency": 1.0
-    },
-    "T7s": {
-      "action": "raise",
-      "frequency": 1.0
-    },
-    "T6s": {
-      "action": "fold",
-      "frequency": 0.67,
+      "frequency": 0.94,
       "frequencies": {
-        "raise": 0.33,
-        "fold": 0.67
+        "raise": 0.94,
+        "fold": 0.06
       }
     },
-    "T5s": {
+    "T8s": {
       "action": "fold",
       "frequency": 0.0,
       "boundaryType": "borderline_fold",
@@ -322,6 +297,18 @@
       "tags": [
         "boundary"
       ]
+    },
+    "T7s": {
+      "action": "fold",
+      "frequency": 0.0
+    },
+    "T6s": {
+      "action": "fold",
+      "frequency": 0.0
+    },
+    "T5s": {
+      "action": "fold",
+      "frequency": 0.0
     },
     "T4s": {
       "action": "fold",
@@ -337,49 +324,51 @@
     },
     "A9o": {
       "action": "raise",
-      "frequency": 1.0
+      "frequency": 1.0,
+      "boundaryType": "borderline_raise",
+      "boundaryScore": 0.8,
+      "tags": [
+        "offsuit_ace",
+        "boundary"
+      ]
     },
     "K9o": {
-      "action": "raise",
-      "frequency": 1.0
+      "action": "fold",
+      "frequency": 0.0,
+      "boundaryType": "borderline_fold",
+      "boundaryScore": 0.8,
+      "tags": [
+        "offsuit_king",
+        "boundary"
+      ]
     },
     "Q9o": {
-      "action": "raise",
-      "frequency": 1.0
+      "action": "fold",
+      "frequency": 0.0
     },
     "J9o": {
-      "action": "raise",
-      "frequency": 1.0
+      "action": "fold",
+      "frequency": 0.0
     },
     "T9o": {
-      "action": "raise",
-      "frequency": 1.0
+      "action": "fold",
+      "frequency": 0.0
     },
     "99": {
       "action": "raise",
       "frequency": 1.0
     },
     "98s": {
-      "action": "raise",
-      "frequency": 1.0
+      "action": "fold",
+      "frequency": 0.0
     },
     "97s": {
-      "action": "raise",
-      "frequency": 1.0,
-      "boundaryType": "borderline_raise",
-      "boundaryScore": 0.8,
-      "tags": [
-        "boundary"
-      ]
+      "action": "fold",
+      "frequency": 0.0
     },
     "96s": {
       "action": "fold",
-      "frequency": 0.0,
-      "boundaryType": "borderline_fold",
-      "boundaryScore": 0.8,
-      "tags": [
-        "boundary"
-      ]
+      "frequency": 0.0
     },
     "95s": {
       "action": "fold",
@@ -399,12 +388,18 @@
     },
     "A8o": {
       "action": "raise",
-      "frequency": 1.0
-    },
-    "K8o": {
-      "action": "raise",
       "frequency": 1.0,
       "boundaryType": "borderline_raise",
+      "boundaryScore": 0.8,
+      "tags": [
+        "offsuit_ace",
+        "boundary"
+      ]
+    },
+    "K8o": {
+      "action": "fold",
+      "frequency": 0.0,
+      "boundaryType": "borderline_fold",
       "boundaryScore": 0.8,
       "tags": [
         "offsuit_king",
@@ -413,12 +408,7 @@
     },
     "Q8o": {
       "action": "fold",
-      "frequency": 0.0,
-      "boundaryType": "borderline_fold",
-      "boundaryScore": 0.8,
-      "tags": [
-        "boundary"
-      ]
+      "frequency": 0.0
     },
     "J8o": {
       "action": "fold",
@@ -437,8 +427,8 @@
       "frequency": 1.0
     },
     "87s": {
-      "action": "raise",
-      "frequency": 1.0
+      "action": "fold",
+      "frequency": 0.0
     },
     "86s": {
       "action": "fold",
@@ -461,14 +451,12 @@
       "frequency": 0.0
     },
     "A7o": {
-      "action": "raise",
-      "frequency": 1.0,
-      "boundaryType": "borderline_raise",
-      "boundaryScore": 0.8,
-      "tags": [
-        "offsuit_ace",
-        "boundary"
-      ]
+      "action": "fold",
+      "frequency": 0.94,
+      "frequencies": {
+        "raise": 0.06,
+        "fold": 0.94
+      }
     },
     "K7o": {
       "action": "fold",
@@ -525,24 +513,12 @@
       "frequency": 0.0
     },
     "A6o": {
-      "action": "raise",
-      "frequency": 1.0,
-      "boundaryType": "borderline_raise",
-      "boundaryScore": 0.8,
-      "tags": [
-        "offsuit_ace",
-        "boundary"
-      ]
+      "action": "fold",
+      "frequency": 0.0
     },
     "K6o": {
       "action": "fold",
-      "frequency": 0.0,
-      "boundaryType": "borderline_fold",
-      "boundaryScore": 0.8,
-      "tags": [
-        "offsuit_king",
-        "boundary"
-      ]
+      "frequency": 0.0
     },
     "Q6o": {
       "action": "fold",
@@ -570,11 +546,23 @@
     },
     "66": {
       "action": "raise",
-      "frequency": 1.0
+      "frequency": 1.0,
+      "boundaryType": "borderline_raise",
+      "boundaryScore": 0.8,
+      "tags": [
+        "pair",
+        "boundary"
+      ]
     },
     "65s": {
       "action": "fold",
-      "frequency": 0.0
+      "frequency": 0.0,
+      "boundaryType": "borderline_fold",
+      "boundaryScore": 0.8,
+      "tags": [
+        "suited_connector",
+        "boundary"
+      ]
     },
     "64s": {
       "action": "fold",
@@ -590,13 +578,11 @@
     },
     "A5o": {
       "action": "raise",
-      "frequency": 1.0,
-      "boundaryType": "borderline_raise",
-      "boundaryScore": 0.8,
-      "tags": [
-        "offsuit_ace",
-        "boundary"
-      ]
+      "frequency": 0.66,
+      "frequencies": {
+        "raise": 0.66,
+        "fold": 0.34
+      }
     },
     "K5o": {
       "action": "fold",
@@ -637,12 +623,11 @@
       "frequency": 0.0
     },
     "55": {
-      "action": "jam",
-      "frequency": 1.0,
+      "action": "fold",
+      "frequency": 0.79,
       "frequencies": {
-        "raise": 0.0,
-        "jam": 1.0,
-        "fold": 0.0
+        "raise": 0.21,
+        "fold": 0.79
       }
     },
     "54s": {
@@ -658,24 +643,12 @@
       "frequency": 0.0
     },
     "A4o": {
-      "action": "raise",
-      "frequency": 1.0,
-      "boundaryType": "borderline_raise",
-      "boundaryScore": 0.8,
-      "tags": [
-        "offsuit_ace",
-        "boundary"
-      ]
+      "action": "fold",
+      "frequency": 0.0
     },
     "K4o": {
       "action": "fold",
-      "frequency": 0.0,
-      "boundaryType": "borderline_fold",
-      "boundaryScore": 0.8,
-      "tags": [
-        "offsuit_king",
-        "boundary"
-      ]
+      "frequency": 0.0
     },
     "Q4o": {
       "action": "fold",
@@ -710,13 +683,8 @@
       "frequency": 0.0
     },
     "44": {
-      "action": "raise",
-      "frequency": 0.84,
-      "frequencies": {
-        "raise": 0.84,
-        "jam": 0.16,
-        "fold": 0.0
-      }
+      "action": "fold",
+      "frequency": 0.0
     },
     "43s": {
       "action": "fold",
@@ -727,24 +695,12 @@
       "frequency": 0.0
     },
     "A3o": {
-      "action": "raise",
-      "frequency": 1.0,
-      "boundaryType": "borderline_raise",
-      "boundaryScore": 0.8,
-      "tags": [
-        "offsuit_ace",
-        "boundary"
-      ]
+      "action": "fold",
+      "frequency": 0.0
     },
     "K3o": {
       "action": "fold",
-      "frequency": 0.0,
-      "boundaryType": "borderline_fold",
-      "boundaryScore": 0.8,
-      "tags": [
-        "offsuit_king",
-        "boundary"
-      ]
+      "frequency": 0.0
     },
     "Q3o": {
       "action": "fold",
@@ -783,35 +739,20 @@
       "frequency": 0.0
     },
     "33": {
-      "action": "raise",
-      "frequency": 0.49,
-      "frequencies": {
-        "raise": 0.49,
-        "jam": 0.06,
-        "fold": 0.45
-      }
+      "action": "fold",
+      "frequency": 0.0
     },
     "32s": {
       "action": "fold",
       "frequency": 0.0
     },
     "A2o": {
-      "action": "raise",
-      "frequency": 0.64,
-      "frequencies": {
-        "raise": 0.64,
-        "fold": 0.36
-      }
+      "action": "fold",
+      "frequency": 0.0
     },
     "K2o": {
       "action": "fold",
-      "frequency": 0.0,
-      "boundaryType": "borderline_fold",
-      "boundaryScore": 0.8,
-      "tags": [
-        "offsuit_king",
-        "boundary"
-      ]
+      "frequency": 0.0
     },
     "Q2o": {
       "action": "fold",
