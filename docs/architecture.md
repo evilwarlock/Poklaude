@@ -12,8 +12,9 @@ Browser loads static assets from GitHub Pages. The Next.js app runs entirely in 
 | --- | --- |
 | `app/page.tsx` | Setup, drill, and results UI |
 | `app/globals.css` | Styling and disabled option visuals |
-| `lib/poker.ts` | Types, seed questions, filter availability, drill selection, weakness summary |
+| `lib/poker.ts` | Types, seed questions, filter availability, drill selection, weakness summary, exports `displayPosition` |
 | `next.config.js` | Static export and GitHub Pages base path |
+| `.eslintrc.json` | ESLint config extending `next/core-web-vitals` |
 | `.github/workflows/pages.yml` | Static build and Pages deployment workflow |
 
 ## Why static first
@@ -36,6 +37,6 @@ Move off pure GitHub Pages when we need user accounts, uploaded images, saved ra
 
 ## Deployment notes
 
-The Pages workflow currently uses `npm install` because the repo does not have a lockfile. Later, commit `package-lock.json` and switch back to `npm ci` with npm cache enabled.
+The Pages workflow currently uses `npm install`. A `package-lock.json` is now committed; switch back to `npm ci` with npm cache enabled when ready.
 
 GitHub Pages must be enabled in repository settings with the source set to GitHub Actions.
