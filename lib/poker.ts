@@ -222,6 +222,6 @@ export function summarizeWeakness(attempts: DrillAttempt[]) {
   return { total, mistakes: mistakes.length, accuracy, weakSpots };
 }
 
-function displayPosition(position: Position) {
+export function displayPosition(position: Position) {
   return position === 'UTG+1' ? 'UTG1' : position;
 }
