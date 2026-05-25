@@ -41,12 +41,20 @@ export default function Home() {
   useEffect(() => {
     const stored = window.localStorage.getItem(storageKey);
     if (stored) {
-      setAttempts(JSON.parse(stored) as DrillAttempt[]);
+      try {
+        setAttempts(JSON.parse(stored) as DrillAttempt[]);
+      } catch {
+        setAttempts([]);
+      }
     }
   }, []);
 
   useEffect(() => {
-    window.localStorage.setItem(storageKey, JSON.stringify(attempts));
+    try {
+      window.localStorage.setItem(storageKey, JSON.stringify(attempts));
+    } catch {
+      // ignore (e.g. private browsing storage full)
+    }
   }, [attempts]);
 
   const summary = useMemo(() => summarizeWeakness(attempts), [attempts]);
