@@ -244,7 +244,7 @@ export default function Home() {
       <FilterCard
         title="Villain Position"
         count={filters.villainPositions.length}
-        subtitle="Unavailable for RFI MVP"
+        subtitle={filters.villainPositions.includes('Any') ? 'Any opener' : filters.villainPositions.join(', ')}
         expanded={expanded === 'villain'}
         onToggle={() => setExpanded(expanded === 'villain' ? null : 'villain')}
         onClear={() => setFilters((prev) => ({ ...prev, villainPositions: ['Any'] }))}
@@ -255,7 +255,9 @@ export default function Home() {
               key={position.value}
               option={position}
               active={filters.villainPositions.includes(position.value)}
-              onClick={() => undefined}
+              onClick={() => toggleArrayValue<Position | 'Any'>(position.value, filters.villainPositions, (value) =>
+                setFilters((prev) => ({ ...prev, villainPositions: value.length ? value : ['Any'] })),
+              )}
             />
           ))}
         </div>
@@ -389,7 +391,7 @@ function DrillScreen({
         ))}
         <div className="spot-title">
           <div className="pot">● {question.potBb.toFixed(2)} bb ⓘ</div>
-          <div>{displayPosition(question.heroPosition)} RFI at {question.stackDepth}bb</div>
+          <div>{displayPosition(question.heroPosition)} {question.scenario} at {question.stackDepth}bb{question.villainPosition ? ` vs ${displayPosition(question.villainPosition)}` : ''}</div>
         </div>
         <div className="cards">
           <div className={`card-face ${question.cards[0].includes('♥') || question.cards[0].includes('♦') ? 'red' : ''}`}>{question.cards[0]}</div>
