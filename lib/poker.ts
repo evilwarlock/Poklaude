@@ -5,6 +5,34 @@ import sb from '@/data/ranges/20bb-rfi-sb.json';
 import utg from '@/data/ranges/20bb-rfi-utg.json';
 import utg1 from '@/data/ranges/20bb-rfi-utg1.json';
 import utg2 from '@/data/ranges/20bb-rfi-utg2.json';
+import vsHjVsUtg2 from '@/data/ranges/20bb-vsopen-hjvsutg2.json';
+import vsSbVsBtn from '@/data/ranges/20bb-vsopen-sbvsbtn.json';
+import vsSbVsCo from '@/data/ranges/20bb-vsopen-sbvsco.json';
+import vsSbVsHj from '@/data/ranges/20bb-vsopen-sbvshj.json';
+import vsSbVsUtg from '@/data/ranges/20bb-vsopen-sbvsutg.json';
+import vsSbVsUtg1 from '@/data/ranges/20bb-vsopen-sbvsutg1.json';
+import vsSbVsUtg2 from '@/data/ranges/20bb-vsopen-sbvsutg2.json';
+import vsUtg1VsUtg from '@/data/ranges/20bb-vsopen-utg1vsutg.json';
+import vsUtg2VsUtg from '@/data/ranges/20bb-vsopen-utg2vsutg.json';
+import vsUtg2VsUtg1 from '@/data/ranges/20bb-vsopen-utg2vsutg1.json';
+import vsBbVsBtn from '@/data/ranges/20bb-vsopen-bbvsbtn.json';
+import vsBbVsCo from '@/data/ranges/20bb-vsopen-bbvsco.json';
+import vsBbVsHj from '@/data/ranges/20bb-vsopen-bbvshj.json';
+import vsBbVsSb from '@/data/ranges/20bb-vsopen-bbvssb.json';
+import vsBbVsUtg from '@/data/ranges/20bb-vsopen-bbvsutg.json';
+import vsBbVsUtg1 from '@/data/ranges/20bb-vsopen-bbvsutg1.json';
+import vsBbVsUtg2 from '@/data/ranges/20bb-vsopen-bbvsutg2.json';
+import vsBtnVsCo from '@/data/ranges/20bb-vsopen-btnvsco.json';
+import vsBtnVsHj from '@/data/ranges/20bb-vsopen-btnvshj.json';
+import vsBtnVsUtg from '@/data/ranges/20bb-vsopen-btnvsutg.json';
+import vsBtnVsUtg1 from '@/data/ranges/20bb-vsopen-btnvsutg1.json';
+import vsBtnVsUtg2 from '@/data/ranges/20bb-vsopen-btnvsutg2.json';
+import vsCoVsHj from '@/data/ranges/20bb-vsopen-covshj.json';
+import vsCoVsUtg from '@/data/ranges/20bb-vsopen-covsutg.json';
+import vsCoVsUtg1 from '@/data/ranges/20bb-vsopen-covsutg1.json';
+import vsCoVsUtg2 from '@/data/ranges/20bb-vsopen-covsutg2.json';
+import vsHjVsUtg from '@/data/ranges/20bb-vsopen-hjvsutg.json';
+import vsHjVsUtg1 from '@/data/ranges/20bb-vsopen-hjvsutg1.json';
 
 export type Scenario = 'RFI' | 'BB Defense' | 'vs RFI' | 'vs 3-Bet';
 export type Position = 'UTG' | 'UTG+1' | 'UTG+2' | 'LJ' | 'HJ' | 'CO' | 'BTN' | 'SB' | 'BB';
@@ -58,7 +86,7 @@ const mvpDisabledReason = 'Coming soon';
 export const scenarioOptions: Array<Availability<Scenario>> = [
   { value: 'RFI', label: 'RFI', enabled: true },
   { value: 'BB Defense', label: 'BB Defense', enabled: false, reason: mvpDisabledReason },
-  { value: 'vs RFI', label: 'vs RFI', enabled: false, reason: mvpDisabledReason },
+  { value: 'vs RFI', label: 'vs RFI', enabled: true },
   { value: 'vs 3-Bet', label: 'vs 3-Bet', enabled: false, reason: mvpDisabledReason },
 ];
 
@@ -85,17 +113,18 @@ export const positionOptions: Array<Availability<Position>> = [
 ];
 
 export const villainPositionOptions: Array<Availability<Position | 'Any'>> = [
-  { value: 'Any', label: 'Any', enabled: false, reason: 'Only RFI drills are supported in the MVP' },
+  { value: 'Any', label: 'Any', enabled: true },
   ...positions.map((position) => ({
     value: position,
-    label: position === 'UTG+1' ? 'UTG1' : position,
-    enabled: false,
-    reason: 'Only RFI drills are supported in the MVP',
+    label: position === 'UTG+1' ? 'UTG1' : position === 'UTG+2' ? 'UTG2' : position,
+    enabled: true,
   })),
 ];
 
 type RangeFile = {
-  position: string;
+  position?: string;
+  heroPosition?: string;
+  openerPosition?: string;
   stackDepthBb: number;
   hands: Record<string, { action: string; frequency: number; boundaryScore?: number }>;
 };
@@ -110,29 +139,48 @@ function cardsFromHand(hand: string): [string, string] {
 }
 
 function rangeFileToQuestions(file: RangeFile): DrillQuestion[] {
-  const position = file.position as Position;
+  const position = (file.heroPosition ?? file.position) as Position;
+  const villainPosition = file.openerPosition as Position | undefined;
+  const isVsOpen = !!file.openerPosition;
+  const scenario: Scenario = isVsOpen ? 'vs RFI' : 'RFI';
+  const actions: DrillAction[] = isVsOpen ? ['Call', 'Raise', 'All-In', 'Fold'] : ['Raise', 'Fold'];
+
+  function toAction(a: string): DrillAction {
+    if (a === 'raise') return 'Raise';
+    if (a === 'call') return 'Call';
+    if (a === 'jam') return 'All-In';
+    return 'Fold';
+  }
+
   return Object.entries(file.hands)
     .filter(([, h]) => h.boundaryScore !== undefined)
     .map(([hand, h]) => ({
-      id: `rfi-${file.stackDepthBb}-${position.toLowerCase().replace('+', '')}-${hand.toLowerCase()}`,
-      scenario: 'RFI' as const,
+      id: `${scenario.replace(' ', '-').toLowerCase()}-${file.stackDepthBb}-${position.toLowerCase().replace('+', '')}${villainPosition ? `-vs${villainPosition.toLowerCase().replace('+', '')}` : ''}-${hand.toLowerCase()}`,
+      scenario,
       stackDepth: file.stackDepthBb,
       heroPosition: position,
-      potBb: 1.5,
+      villainPosition,
+      potBb: isVsOpen ? 2.5 : 1.5,
       hand,
       cards: cardsFromHand(hand),
-      actions: ['Raise', 'Fold'] as DrillAction[],
-      correctAction: (h.action === 'raise' ? 'Raise' : 'Fold') as DrillAction,
+      actions,
+      correctAction: toAction(h.action),
       frequency: h.frequency,
       evBb: 0,
       boundaryScore: h.boundaryScore!,
-      explanation: `${displayPosition(position)} ${file.stackDepthBb}bb RFI: ${hand} — ${h.action}`,
+      explanation: `${displayPosition(position)} ${file.stackDepthBb}bb ${scenario}: ${hand} — ${h.action}`,
     }));
 }
 
-const seededQuestions: DrillQuestion[] = [btn, co, hj, sb, utg, utg1, utg2].flatMap((f) =>
-  rangeFileToQuestions(f as RangeFile),
-);
+const seededQuestions: DrillQuestion[] = [
+  btn, co, hj, sb, utg, utg1, utg2,
+  vsHjVsUtg2, vsSbVsBtn, vsSbVsCo, vsSbVsHj, vsSbVsUtg, vsSbVsUtg1, vsSbVsUtg2,
+  vsUtg1VsUtg, vsUtg2VsUtg, vsUtg2VsUtg1,
+  vsBbVsBtn, vsBbVsCo, vsBbVsHj, vsBbVsSb, vsBbVsUtg, vsBbVsUtg1, vsBbVsUtg2,
+  vsBtnVsCo, vsBtnVsHj, vsBtnVsUtg, vsBtnVsUtg1, vsBtnVsUtg2,
+  vsCoVsHj, vsCoVsUtg, vsCoVsUtg1, vsCoVsUtg2,
+  vsHjVsUtg, vsHjVsUtg1,
+].flatMap((f) => rangeFileToQuestions(f as RangeFile));
 
 export const filterOptions = { scenarios, stacks, positions };
 
@@ -151,8 +199,10 @@ export function getCandidateQuestions(filters: TrainingFilters, attempts: DrillA
     const scenarioOk = filters.scenarios.includes(question.scenario);
     const stackOk = filters.stackDepths.includes(question.stackDepth);
     const heroOk = filters.heroPositions.includes(question.heroPosition);
+    const villainOk = filters.villainPositions.includes('Any') ||
+      (question.villainPosition ? filters.villainPositions.includes(question.villainPosition) : true);
     const closeOk = !filters.closeSpotsOnly || question.boundaryScore >= 0.7;
-    return scenarioOk && stackOk && heroOk && closeOk;
+    return scenarioOk && stackOk && heroOk && villainOk && closeOk;
   });
 
   return [...filtered].sort((a, b) => {

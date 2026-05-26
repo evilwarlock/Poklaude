@@ -1,0 +1,46 @@
+{
+  "id": "20bb-btnvshj",
+  "title": "20bb BTN vs HJ Open",
+  "spotType": "VS_OPEN",
+  "heroPosition": "BTN",
+  "openerPosition": "HJ",
+  "stackDepthBb": 20,
+  "actions": [
+    "raise",
+    "call",
+    "jam",
+    "fold"
+  ],
+  "status": "dummy",
+  "source": {
+    "type": "uploaded_image",
+    "label": "20bb-vsopen-btnvshj.png"
+  },
+  "boundaryRule": {
+    "method": "right_neighbor_of_non_pure_fold",
+    "direction": "right",
+    "description": "A boundary hand is the immediate hand to the right of a non-pure-fold hand in the same grid row."
+  },
+  "hands": {
+    "AA": {
+      "action": "raise",
+      "frequency": 1,
+      "boundaryType": "borderline_raise",
+      "boundaryScore": 0.8,
+      "tags": [
+        "pair",
+        "boundary"
+      ]
+    },
+    "KK": {
+      "action": "fold",
+      "frequency": 0,
+      "boundaryType": "borderline_fold",
+      "boundaryScore": 0.8,
+      "tags": [
+        "pair",
+        "boundary"
+      ]
+    }
+  }
+}
